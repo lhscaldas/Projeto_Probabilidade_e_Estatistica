@@ -1,12 +1,28 @@
 from preprocessamento import *
 
+# Função para calcular estatísticas gerais
+def estatisticas_gerais(df_smart, df_chrome):
+    # Smart TV
+    print(f"Smart TV - Download: média={df_smart['bytes_down'].mean():.2f}, variância={df_smart['bytes_down'].var():.2f}, desvio padrão={df_smart['bytes_down'].std():.2f}")
+    print(f"Smart TV - Upload: média={df_smart['bytes_up'].mean():.2f}, variância={df_smart['bytes_up'].var():.2f}, desvio padrão={df_smart['bytes_up'].std():.2f}")
+
+    # Chromecast
+    print(f"Chromecast - Download: média={df_chrome['bytes_down'].mean():.2f}, variância={df_chrome['bytes_down'].var():.2f}, desvio padrão={df_chrome['bytes_down'].std():.2f}")
+    print(f"Chromecast - Upload: média={df_chrome['bytes_up'].mean():.2f}, variância={df_chrome['bytes_up'].var():.2f}, desvio padrão={df_chrome['bytes_up'].std():.2f}")
+
+    # salvar as estatísticas em um arquivo de texto
+    with open('estatisticas_gerais/estatisticas_gerais.txt', 'w', encoding='utf-8') as f:
+        f.write(f"Smart TV - Download: média={df_smart['bytes_down'].mean():.2f}, variância={df_smart['bytes_down'].var():.2f}, desvio padrão={df_smart['bytes_down'].std():.2f}\n")
+        f.write(f"Smart TV - Upload: média={df_smart['bytes_up'].mean():.2f}, variância={df_smart['bytes_up'].var():.2f}, desvio padrão={df_smart['bytes_up'].std():.2f}\n")
+        f.write(f"Chromecast - Download: média={df_chrome['bytes_down'].mean():.2f}, variância={df_chrome['bytes_down'].var():.2f}, desvio padrão={df_chrome['bytes_down'].std():.2f}\n")
+        f.write(f"Chromecast - Upload: média={df_chrome['bytes_up'].mean():.2f}, variância={df_chrome['bytes_up'].var():.2f}, desvio padrão={df_chrome['bytes_up'].std():.2f}\n")
+
 # Função para plotar histogramas
 def histogramas(df_smart, df_chrome):
     # Calculo do número de bins pelo método de Sturges: k = 1 + log2(n)
     n_smart = len(df_smart)
     k_smart = ceil(1 + np.log2(n_smart))
     print('Número de bins Smart TV:', k_smart)
-
     n_chrome = len(df_chrome)
     k_chrome = ceil(1 + np.log2(n_chrome))
     print('Número de bins Chromecast:', k_chrome)
@@ -22,7 +38,7 @@ def histogramas(df_smart, df_chrome):
     sns.histplot(df_smart['bytes_down'], bins=k_smart, color='blue', kde=kde)
     plt.title('Smart TV - Download')
     plt.gca().yaxis.set_major_formatter(ticker.FuncFormatter(lambda x, _: f'{x/1e5:.0f}'))
-    plt.ylabel('Frequência ($\times 10^5$)')
+    plt.ylabel('Frequência ($\\times 10^5$)')
     plt.xlabel('bps (log10)')
 
     # Chromecast - Download
@@ -30,7 +46,7 @@ def histogramas(df_smart, df_chrome):
     sns.histplot(df_chrome['bytes_down'], bins=k_chrome, color='red', kde=kde)
     plt.title('Chromecast - Download')
     plt.gca().yaxis.set_major_formatter(ticker.FuncFormatter(lambda x, _: f'{x/1e5:.0f}'))
-    plt.ylabel('Frequência ($\times 10^5$)')
+    plt.ylabel('Frequência ($\\times 10^5$)')
     plt.xlabel('bps (log10)')
 
     # Smart TV - Upload
@@ -38,7 +54,7 @@ def histogramas(df_smart, df_chrome):
     sns.histplot(df_smart['bytes_up'], bins=k_smart, color='blue', kde=kde)
     plt.title('Smart TV - Upload')
     plt.gca().yaxis.set_major_formatter(ticker.FuncFormatter(lambda x, _: f'{x/1e5:.0f}'))
-    plt.ylabel('Frequência ($\times 10^5$)')
+    plt.ylabel('Frequência ($\\times 10^5$)')
     plt.xlabel('bps (log10)')
 
     # Chromecast - Upload
@@ -46,22 +62,13 @@ def histogramas(df_smart, df_chrome):
     sns.histplot(df_chrome['bytes_up'], bins=k_chrome, color='red', kde=kde)
     plt.title('Chromecast - Upload')
     plt.gca().yaxis.set_major_formatter(ticker.FuncFormatter(lambda x, _: f'{x/1e5:.0f}'))
-    plt.ylabel('Frequência ($\times 10^5$)')
+    plt.ylabel('Frequência ($\\times 10^5$)')
     plt.xlabel('bps (log10)')
 
     # Ajustar layout e exibir o gráfico
     plt.tight_layout()
+    plt.savefig('estatisticas_gerais/histogramas.png')
     plt.show()
-
-# Função para calcular estatísticas gerais
-def estatisticas_gerais(df_smart, df_chrome):
-    # Smart TV
-    print(f"Smart TV - Download: média={df_smart['bytes_down'].mean():.2f}, variância={df_smart['bytes_down'].var():.2f}, desvio padrão={df_smart['bytes_down'].std():.2f}")
-    print(f"Smart TV - Upload: média={df_smart['bytes_up'].mean():.2f}, variância={df_smart['bytes_up'].var():.2f}, desvio padrão={df_smart['bytes_up'].std():.2f}")
-
-    # Chromecast
-    print(f"Chromecast - Download: média={df_chrome['bytes_down'].mean():.2f}, variância={df_chrome['bytes_down'].var():.2f}, desvio padrão={df_chrome['bytes_down'].std():.2f}")
-    print(f"Chromecast - Upload: média={df_chrome['bytes_up'].mean():.2f}, variância={df_chrome['bytes_up'].var():.2f}, desvio padrão={df_chrome['bytes_up'].std():.2f}")
 
 
 # Função para o boxplot
@@ -87,6 +94,7 @@ def boxplot(df_smart, df_chrome):
     plt.xlabel('Tipo de Tráfego')
     plt.ylabel('bps (log10)')
     plt.legend(title='Dispositivo')
+    plt.savefig('estatisticas_gerais/boxplot.png')
     plt.show()
 
 # Função para calcular a ECDF
@@ -98,12 +106,12 @@ def ecdf(data):
     return data_sorted, y
 
 # Função para plotar a ECDF
-def plot_ecdf(df_smart, df_chrome, sample_size=None):
+def plot_ecdf(df_smart, df_chrome):
     # Calcula a ECDF
-    x_smart_down, y_smart_down = ecdf(df_smart['bytes_down'], sample_size)
-    x_smart_up, y_smart_up = ecdf(df_smart['bytes_up'], sample_size)
-    x_chrome_down, y_chrome_down = ecdf(df_chrome['bytes_down'], sample_size)
-    x_chrome_up, y_chrome_up = ecdf(df_chrome['bytes_up'], sample_size)
+    x_smart_down, y_smart_down = ecdf(df_smart['bytes_down'])
+    x_smart_up, y_smart_up = ecdf(df_smart['bytes_up'])
+    x_chrome_down, y_chrome_down = ecdf(df_chrome['bytes_down'])
+    x_chrome_up, y_chrome_up = ecdf(df_chrome['bytes_up'])
 
     # Cria o gráfico
     plt.figure(figsize=(12, 6))
@@ -116,6 +124,7 @@ def plot_ecdf(df_smart, df_chrome, sample_size=None):
     plt.ylabel('Probabilidade Acumulada')
     plt.grid(True)
     plt.legend()
+    plt.savefig('estatisticas_gerais/ecdf.png')
     plt.show()
 
 if __name__ == '__main__':
@@ -123,6 +132,6 @@ if __name__ == '__main__':
 
     # Estatisticas gerais
     estatisticas_gerais(df1, df2)
-    # histogramas(df1, df2)
-    # boxplot(df1, df2)
-    # plot_ecdf(df1, df2)
+    histogramas(df1, df2)
+    boxplot(df1, df2)
+    plot_ecdf(df1, df2)
