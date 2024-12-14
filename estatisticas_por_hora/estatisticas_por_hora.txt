@@ -117,4 +117,3 @@ Hora 23: Smart TV - Download: média=2.59, variância=6.65, desvio padrão=2.58
 Hora 23: Smart TV - Upload: média=2.37, variância=3.94, desvio padrão=1.98
 Hora 23: Chromecast - Download: média=4.05, variância=2.16, desvio padrão=1.47
 Hora 23: Chromecast - Upload: média=3.51, variância=0.69, desvio padrão=0.83
-

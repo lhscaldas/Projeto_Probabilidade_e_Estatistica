@@ -107,5 +107,7 @@ if __name__ == '__main__':
     df1, df2 = preprocessamento()
 
     # Estatísticas por hora
-    estatisticas_por_hora(df1, df2)
-    # boxplots_por_hora(df1, df2)
+    medias_smart, variancias_smart, desvios_smart, medias_chrome, variancias_chrome, desvios_chrome = estatisticas_por_hora(df1, df2)
+    
+    # Boxplots por hora
+    boxplots_por_hora(df1, df2)
