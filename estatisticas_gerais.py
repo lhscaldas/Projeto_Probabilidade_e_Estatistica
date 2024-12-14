@@ -135,3 +135,6 @@ if __name__ == '__main__':
     histogramas(df1, df2)
     boxplot(df1, df2)
     plot_ecdf(df1, df2)
+
+# Número de bins Smart TV: 24
+# Número de bins Chromecast: 22

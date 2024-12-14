@@ -65,6 +65,3 @@ def preprocessamento():
 if __name__ == '__main__':
     eda()
     df1, df2 = preprocessamento()
-
-    # Estatísticas por hora
-    # estatisticas_por_hora(df1, df2)
