@@ -1,5 +1,6 @@
 from a_preprocessamento import *
 from scipy import stats
+from sklearn.preprocessing import StandardScaler
 import json
 
 # Criando datasets com a maior taxa de upload e download por dispositivo
@@ -100,6 +101,7 @@ def MLE(data):
 
 # Cálculo do MLE para distribuição Gaussiana e Gamma
 def passo_3(df_smart_up, df_smart_down, df_chrome_up, df_chrome_down, salvar = False):
+
     # Cálculo do MLE para as distribuições
     media_smart_down, variancia_smart_down, a_smart_down, b_smart_down = MLE(df_smart_down['bytes_down'])
     media_smart_up, variancia_smart_up, a_smart_up, b_smart_up = MLE(df_smart_up['bytes_up'])
@@ -112,42 +114,62 @@ def passo_3(df_smart_up, df_smart_down, df_chrome_up, df_chrome_down, salvar = F
     parametros_chrome_up = {'media': media_chrome_up, 'variancia': variancia_chrome_up, 'a': a_chrome_up, 'b': b_chrome_up}
     parametros_chrome_down = {'media': media_chrome_down, 'variancia': variancia_chrome_down, 'a': a_chrome_down, 'b': b_chrome_down}
 
-    # Calcular a likelihood para a distribuição Gaussiana
-    likelihood_smart_up_gaussiana = np.exp(np.sum(np.log(stats.norm.pdf(df_smart_up['bytes_up'], media_smart_up, np.sqrt(variancia_smart_up)))))
-    likelihood_smart_down_gaussiana = np.exp(np.sum(np.log(stats.norm.pdf(df_smart_down['bytes_down'], media_smart_down, np.sqrt(variancia_smart_down)))))
-    likelihood_chrome_up_gaussiana = np.exp(np.sum(np.log(stats.norm.pdf(df_chrome_up['bytes_up'], media_chrome_up, np.sqrt(variancia_chrome_up)))))
-    likelihood_chrome_down_gaussiana = np.exp(np.sum(np.log(stats.norm.pdf(df_chrome_down['bytes_down'], media_chrome_down, np.sqrt(variancia_chrome_down)))))
+    # Calcular a log-likelihood para a distribuição Gaussiana
+    epsilon = 1e-10
+    log_likelihood_smart_up_gaussiana = np.sum(np.log(stats.norm.pdf(df_smart_up['bytes_up']+epsilon, media_smart_up, np.sqrt(variancia_smart_up))))
+    log_likelihood_smart_down_gaussiana = np.sum(np.log(stats.norm.pdf(df_smart_down['bytes_down']+epsilon, media_smart_down, np.sqrt(variancia_smart_down))))
+    log_likelihood_chrome_up_gaussiana = np.sum(np.log(stats.norm.pdf(df_chrome_up['bytes_up']+epsilon, media_chrome_up, np.sqrt(variancia_chrome_up))))
+    log_likelihood_chrome_down_gaussiana = np.sum(np.log(stats.norm.pdf(df_chrome_down['bytes_down']+epsilon, media_chrome_down, np.sqrt(variancia_chrome_down))))
 
-    # Calcular a likelihood para a distribuição Gamma
-    likelihood_smart_up_gamma = np.exp(np.sum(np.log(stats.gamma.pdf(df_smart_up['bytes_up'], a_smart_up, scale=b_smart_up))))
-    likelihood_smart_down_gamma = np.exp(np.sum(np.log(stats.gamma.pdf(df_smart_down['bytes_down'], a_smart_down, scale=b_smart_down))))
-    likelihood_chrome_up_gamma = np.exp(np.sum(np.log(stats.gamma.pdf(df_chrome_up['bytes_up'], a_chrome_up, scale=b_chrome_up))))
-    likelihood_chrome_down_gamma = np.exp(np.sum(np.log(stats.gamma.pdf(df_chrome_down['bytes_down'], a_chrome_down, scale=b_chrome_down))))
+    # Calcular a log-likelihood para a distribuição Gamma
+    log_likelihood_smart_up_gamma = np.sum(np.log(stats.gamma.pdf(df_smart_up['bytes_up']+epsilon, a_smart_up, scale=b_smart_up)))
+    log_likelihood_smart_down_gamma = np.sum(np.log(stats.gamma.pdf(df_smart_down['bytes_down']+epsilon, a_smart_down, scale=b_smart_down)))
+    log_likelihood_chrome_up_gamma = np.sum(np.log(stats.gamma.pdf(df_chrome_up['bytes_up']+epsilon, a_chrome_up, scale=b_chrome_up)))
+    log_likelihood_chrome_down_gamma = np.sum(np.log(stats.gamma.pdf(df_chrome_down['bytes_down']+epsilon, a_chrome_down, scale=b_chrome_down)))
+
+    # Calcular a likelihood para as duas distribuições
+    likelihood_smart_up_gaussiana = np.exp(log_likelihood_smart_up_gaussiana)
+    likelihood_smart_down_gaussiana = np.exp(log_likelihood_smart_down_gaussiana)
+    likelihood_chrome_up_gaussiana = np.exp(log_likelihood_chrome_up_gaussiana)
+    likelihood_chrome_down_gaussiana = np.exp(log_likelihood_chrome_down_gaussiana)
+
+    likelihood_smart_up_gamma = np.exp(log_likelihood_smart_up_gamma)
+    likelihood_smart_down_gamma = np.exp(log_likelihood_smart_down_gamma)
+    likelihood_chrome_up_gamma = np.exp(log_likelihood_chrome_up_gamma)
+    likelihood_chrome_down_gamma = np.exp(log_likelihood_chrome_down_gamma)
 
 
     # Printar os resultados (parametros e likelihood)
     print('Smart TV - Download')
     print('MLE Gaussiana:', parametros_smart_down)
     print('MLE Gamma:', parametros_smart_down)
+    print('Log-likelihood Gaussiana:', log_likelihood_smart_down_gaussiana)
     print('Likelihood Gaussiana:', likelihood_smart_down_gaussiana)
+    print('Log-likelihood Gamma:', log_likelihood_smart_down_gamma)
     print('Likelihood Gamma:', likelihood_smart_down_gamma)
     print()
     print('Smart TV - Upload')
     print('MLE Gaussiana:', parametros_smart_up)
     print('MLE Gamma:', parametros_smart_up)
+    print('Log-likelihood Gaussiana:', log_likelihood_smart_up_gaussiana)
     print('Likelihood Gaussiana:', likelihood_smart_up_gaussiana)
+    print('Log-likelihood Gamma:', log_likelihood_smart_up_gamma)
     print('Likelihood Gamma:', likelihood_smart_up_gamma)
     print()
     print('Chromecast - Download')
     print('MLE Gaussiana:', parametros_chrome_down)
     print('MLE Gamma:', parametros_chrome_down)
+    print('Log-likelihood Gaussiana:', log_likelihood_chrome_down_gaussiana)
     print('Likelihood Gaussiana:', likelihood_chrome_down_gaussiana)
+    print('Log-likelihood Gamma:', log_likelihood_chrome_down_gamma)
     print('Likelihood Gamma:', likelihood_chrome_down_gamma)
     print()
     print('Chromecast - Upload')
     print('MLE Gaussiana:', parametros_chrome_up)
     print('MLE Gamma:', parametros_chrome_up)
+    print('Log-likelihood Gaussiana:', log_likelihood_chrome_up_gaussiana)
     print('Likelihood Gaussiana:', likelihood_chrome_up_gaussiana)
+    print('Log-likelihood Gamma:', log_likelihood_chrome_up_gamma)
     print('Likelihood Gamma:', likelihood_chrome_up_gamma)
 
     # Salvar os resultados em um arquivo de texto
@@ -156,25 +178,33 @@ def passo_3(df_smart_up, df_smart_down, df_chrome_up, df_chrome_down, salvar = F
             "Smart TV - Download": {
                 "MLE Gaussiana": parametros_smart_down,
                 "MLE Gamma": parametros_smart_down,
+                "Log-likelihood Gaussiana": log_likelihood_smart_down_gaussiana,
                 "Likelihood Gaussiana": likelihood_smart_down_gaussiana,
+                "Log-likelihood Gamma": log_likelihood_smart_down_gamma,
                 "Likelihood Gamma": likelihood_smart_down_gamma
             },
             "Smart TV - Upload": {
                 "MLE Gaussiana": parametros_smart_up,
                 "MLE Gamma": parametros_smart_up,
+                "Log-likelihood Gaussiana": log_likelihood_smart_up_gaussiana,
                 "Likelihood Gaussiana": likelihood_smart_up_gaussiana,
+                "Log-likelihood Gamma": log_likelihood_smart_up_gamma,
                 "Likelihood Gamma": likelihood_smart_up_gamma
             },
             "Chromecast - Download": {
                 "MLE Gaussiana": parametros_chrome_down,
                 "MLE Gamma": parametros_chrome_down,
+                "Log-likelihood Gaussiana": log_likelihood_chrome_down_gaussiana,
                 "Likelihood Gaussiana": likelihood_chrome_down_gaussiana,
+                "Log-likelihood Gamma": log_likelihood_chrome_down_gamma,
                 "Likelihood Gamma": likelihood_chrome_down_gamma
             },
             "Chromecast - Upload": {
                 "MLE Gaussiana": parametros_chrome_up,
                 "MLE Gamma": parametros_chrome_up,
+                "Log-likelihood Gaussiana": log_likelihood_chrome_up_gaussiana,
                 "Likelihood Gaussiana": likelihood_chrome_up_gaussiana,
+                "Log-likelihood Gamma": log_likelihood_chrome_up_gamma,
                 "Likelihood Gamma": likelihood_chrome_up_gamma
             }
         }
@@ -273,6 +303,104 @@ def passo_4(df_smart_up, df_smart_down, df_chrome_up, df_chrome_down, file = "es
         plt.savefig('caracterizando_os_horarios/histogramas_pdf.png')
     plt.show()
 
+# probability plot comparando o dataset com uma distribuição normal parametrizada
+def gaussian_probability_plot(dataset, params):
+    """
+    Plota um Probability Plot comparando o dataset com uma distribuição normal parametrizada.
+
+    Parâmetros:
+        dataset (array-like): Os dados reais para comparar com a distribuição.
+        params (dict): Um dicionário com os parâmetros da distribuição normal.
+            - 'media': Média da distribuição.
+            - 'variancia': Variância da distribuição.
+    """
+    # Extrair parâmetros da distribuição
+    media = params['media']
+    variancia = params['variancia']
+    desvio_padrao = np.sqrt(variancia)
+
+    # Configurar a distribuição normal parametrizada
+    dist = stats.norm(loc=media, scale=desvio_padrao)
+
+    # Criar o Probability Plot
+    stats.probplot(dataset, dist=dist, plot=plt)
+    plt.title("Probability Plot: Dados vs. Distribuição Normal Parametrizada")
+    plt.xlabel("Quantis Teóricos")
+    plt.ylabel("Quantis Amostrais")
+    plt.grid(True)
+
+# probability plot comparando o dataset com uma distribuição gamma parametrizada
+def gamma_probability_plot(dataset, params):
+    """
+    Plota um Probability Plot comparando o dataset com uma distribuição gamma parametrizada.
+
+    Parâmetros:
+        dataset (array-like): Os dados reais para comparar com a distribuição.
+        params (dict): Um dicionário com os parâmetros da distribuição gamma.
+            - 'a': Parâmetro 'a' da distribuição.
+            - 'b': Parâmetro 'b' da distribuição.
+    """
+    # Extrair parâmetros da distribuição
+    a = params['a']
+    b = params['b']
+
+    # Configurar a distribuição gamma parametrizada
+    dist = stats.gamma(a=a, scale=b)
+
+    # Criar o Probability Plot
+    stats.probplot(dataset, dist=dist, plot=plt)
+    plt.title("Probability Plot: Dados vs. Distribuição Gamma Parametrizada")
+    plt.xlabel("Quantis Teóricos")
+    plt.ylabel("Quantis Amostrais")
+    plt.grid(True)
+
+# Probability plot para cada distribuição usando os parametros do MLE
+def passo_5(df_smart_up, df_smart_down, df_chrome_up, df_chrome_down, file = "estatisticas_MLE.json", salvar = True):
+    # Carregar os resultados do MLE
+    with open(file, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+        parametros_smart_down = data['Smart TV - Download']['MLE Gaussiana']
+        parametros_smart_up = data['Smart TV - Upload']['MLE Gaussiana']
+        parametros_chrome_down = data['Chromecast - Download']['MLE Gaussiana']
+        parametros_chrome_up = data['Chromecast - Upload']['MLE Gaussiana']
+
+    # plot da distribuição gaussiana
+    plt.figure(figsize=(12, 6))
+    plt.subplot(2, 2, 1)
+    gaussian_probability_plot(df_smart_up['bytes_up'], parametros_smart_up)
+    plt.title('Smart TV - Upload')
+    plt.subplot(2, 2, 2)
+    gaussian_probability_plot(df_smart_down['bytes_down'], parametros_smart_down)
+    plt.title('Smart TV - Download')
+    plt.subplot(2, 2, 3)
+    gaussian_probability_plot(df_chrome_up['bytes_up'], parametros_chrome_up)
+    plt.title('Chromecast - Upload')
+    plt.subplot(2, 2, 4)
+    gaussian_probability_plot(df_chrome_down['bytes_down'], parametros_chrome_down)
+    plt.title('Chromecast - Download')
+    plt.tight_layout()
+    if salvar:
+        plt.savefig('caracterizando_os_horarios/probplot.png')
+    plt.show()
+
+    # plot da distribuição gamma
+    plt.figure(figsize=(12, 6))
+    plt.subplot(2, 2, 1)
+    gamma_probability_plot(df_smart_up['bytes_up'], parametros_smart_up)
+    plt.title('Smart TV - Upload')
+    plt.subplot(2, 2, 2)
+    gamma_probability_plot(df_smart_down['bytes_down'], parametros_smart_down)
+    plt.title('Smart TV - Download')
+    plt.subplot(2, 2, 3)
+    gamma_probability_plot(df_chrome_up['bytes_up'], parametros_chrome_up)
+    plt.title('Chromecast - Upload')
+    plt.subplot(2, 2, 4)
+    gamma_probability_plot(df_chrome_down['bytes_down'], parametros_chrome_down)
+    plt.title('Chromecast - Download')
+    plt.tight_layout()
+    if salvar:
+        plt.savefig('caracterizando_os_horarios/probplot_gamma.png')
+    plt.show()
 
 if __name__ == '__main__':
     # # passo 1: criar datasets com a maior taxa de upload e download por dispositivo
@@ -290,8 +418,11 @@ if __name__ == '__main__':
     # passo_2(dataset_1, dataset_2, dataset_3, dataset_4, salvar=True)
 
     # # passo 3: cálculo do MLE para distribuição Gaussiana e Gamma
-    passo_3(dataset_1, dataset_2, dataset_3, dataset_4, salvar=False)
+    # passo_3(dataset_1, dataset_2, dataset_3, dataset_4, salvar=True)
 
-    # passo 4: plotar histograma, pdf gaussiana e pdf gamma na mesma figura?
+    # # passo 4: plotar histograma, pdf gaussiana e pdf gamma na mesma figura
     # passo_4(dataset_1, dataset_2, dataset_3, dataset_4, file = "caracterizando_os_horarios/estatisticas_mle.json", salvar = True)
+
+    # passo 5: probability plot para cada distribuição usando os parametros do MLE
+    passo_5(dataset_1, dataset_2, dataset_3, dataset_4, file = "caracterizando_os_horarios/estatisticas_mle.json", salvar = True)
 
