@@ -1,4 +1,4 @@
-from preprocessamento import *
+from a_preprocessamento import *
 
 # Função para calcular estatísticas gerais
 def estatisticas_gerais(df_smart, df_chrome):
