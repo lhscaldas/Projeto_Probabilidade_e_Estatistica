@@ -1,6 +1,9 @@
 from a_preprocessamento import *
 from scipy import stats
-from sklearn.preprocessing import StandardScaler
+from scipy.special import digamma
+from scipy.optimize import newton
+from scipy.stats import gamma
+from scipy.stats import kstest
 import json
 
 # Criando datasets com a maior taxa de upload e download por dispositivo
@@ -89,13 +92,26 @@ def passo_2(df_smart_up, df_smart_down, df_chrome_up, df_chrome_down, salvar = F
 
 # Cálculo do MLE para distribuição Gaussiana e Gamma
 def MLE(data):
-    # Estimativa dos parâmetros da Gaussiana
+    # Estimativa da gaussiana
     media = np.mean(data)
     variancia = np.var(data)
 
-    # Estimativa dos parâmetros da Gamma
-    a = media**2 / variancia
-    b = variancia / media
+    # Verificar se data tem valores menores que zero
+    if (data < 0).any():
+        raise ValueError('Os dados contêm valores negativos. A distribuição Gamma não pode ser usada.')
+    
+    # Estimar parâmetros da gamma
+    epsilon = 1e-6
+    a, loc, scale = gamma.fit(data+epsilon, floc=0)
+    b = scale  # Em scipy, scale é equivalente a 'b'
+
+    # Teste de Kolmogorov-Smirnov para Gaussiana
+    ks_stat, p_value = kstest(data, 'norm', args=(media, np.sqrt(variancia)))
+    print(f"KS-Test Gaussiana: Estatística={ks_stat}, p-valor={p_value}")
+
+    # Teste de Kolmogorov-Smirnov para Gamma
+    ks_stat, p_value = kstest(data, 'gamma', args=(a, 0, b))
+    print(f"KS-Test Gamma: Estatística={ks_stat}, p-valor={p_value}")
     
     return media, variancia, a, b
 
@@ -141,32 +157,28 @@ def passo_3(df_smart_up, df_smart_down, df_chrome_up, df_chrome_down, salvar = F
 
     # Printar os resultados (parametros e likelihood)
     print('Smart TV - Download')
-    print('MLE Gaussiana:', parametros_smart_down)
-    print('MLE Gamma:', parametros_smart_down)
+    print('MLE:', parametros_smart_down)
     print('Log-likelihood Gaussiana:', log_likelihood_smart_down_gaussiana)
     print('Likelihood Gaussiana:', likelihood_smart_down_gaussiana)
     print('Log-likelihood Gamma:', log_likelihood_smart_down_gamma)
     print('Likelihood Gamma:', likelihood_smart_down_gamma)
     print()
     print('Smart TV - Upload')
-    print('MLE Gaussiana:', parametros_smart_up)
-    print('MLE Gamma:', parametros_smart_up)
+    print('MLE:', parametros_smart_up)
     print('Log-likelihood Gaussiana:', log_likelihood_smart_up_gaussiana)
     print('Likelihood Gaussiana:', likelihood_smart_up_gaussiana)
     print('Log-likelihood Gamma:', log_likelihood_smart_up_gamma)
     print('Likelihood Gamma:', likelihood_smart_up_gamma)
     print()
     print('Chromecast - Download')
-    print('MLE Gaussiana:', parametros_chrome_down)
-    print('MLE Gamma:', parametros_chrome_down)
+    print('MLE:', parametros_chrome_down)
     print('Log-likelihood Gaussiana:', log_likelihood_chrome_down_gaussiana)
     print('Likelihood Gaussiana:', likelihood_chrome_down_gaussiana)
     print('Log-likelihood Gamma:', log_likelihood_chrome_down_gamma)
     print('Likelihood Gamma:', likelihood_chrome_down_gamma)
     print()
     print('Chromecast - Upload')
-    print('MLE Gaussiana:', parametros_chrome_up)
-    print('MLE Gamma:', parametros_chrome_up)
+    print('MLE:', parametros_chrome_up)
     print('Log-likelihood Gaussiana:', log_likelihood_chrome_up_gaussiana)
     print('Likelihood Gaussiana:', likelihood_chrome_up_gaussiana)
     print('Log-likelihood Gamma:', log_likelihood_chrome_up_gamma)
@@ -176,32 +188,28 @@ def passo_3(df_smart_up, df_smart_down, df_chrome_up, df_chrome_down, salvar = F
     if salvar:
         data = {
             "Smart TV - Download": {
-                "MLE Gaussiana": parametros_smart_down,
-                "MLE Gamma": parametros_smart_down,
+                "MLE": parametros_smart_down,
                 "Log-likelihood Gaussiana": log_likelihood_smart_down_gaussiana,
                 "Likelihood Gaussiana": likelihood_smart_down_gaussiana,
                 "Log-likelihood Gamma": log_likelihood_smart_down_gamma,
                 "Likelihood Gamma": likelihood_smart_down_gamma
             },
             "Smart TV - Upload": {
-                "MLE Gaussiana": parametros_smart_up,
-                "MLE Gamma": parametros_smart_up,
+                "MLE": parametros_smart_up,
                 "Log-likelihood Gaussiana": log_likelihood_smart_up_gaussiana,
                 "Likelihood Gaussiana": likelihood_smart_up_gaussiana,
                 "Log-likelihood Gamma": log_likelihood_smart_up_gamma,
                 "Likelihood Gamma": likelihood_smart_up_gamma
             },
             "Chromecast - Download": {
-                "MLE Gaussiana": parametros_chrome_down,
-                "MLE Gamma": parametros_chrome_down,
+                "MLE": parametros_chrome_down,
                 "Log-likelihood Gaussiana": log_likelihood_chrome_down_gaussiana,
                 "Likelihood Gaussiana": likelihood_chrome_down_gaussiana,
                 "Log-likelihood Gamma": log_likelihood_chrome_down_gamma,
                 "Likelihood Gamma": likelihood_chrome_down_gamma
             },
             "Chromecast - Upload": {
-                "MLE Gaussiana": parametros_chrome_up,
-                "MLE Gamma": parametros_chrome_up,
+                "MLE": parametros_chrome_up,
                 "Log-likelihood Gaussiana": log_likelihood_chrome_up_gaussiana,
                 "Likelihood Gaussiana": likelihood_chrome_up_gaussiana,
                 "Log-likelihood Gamma": log_likelihood_chrome_up_gamma,
@@ -218,10 +226,10 @@ def passo_4(df_smart_up, df_smart_down, df_chrome_up, df_chrome_down, file = "es
     # Carregar os resultados do MLE
     with open(file, 'r', encoding='utf-8') as f:
         data = json.load(f)
-        parametros_smart_down = data['Smart TV - Download']['MLE Gaussiana']
-        parametros_smart_up = data['Smart TV - Upload']['MLE Gaussiana']
-        parametros_chrome_down = data['Chromecast - Download']['MLE Gaussiana']
-        parametros_chrome_up = data['Chromecast - Upload']['MLE Gaussiana']
+        parametros_smart_down = data['Smart TV - Download']['MLE']
+        parametros_smart_up = data['Smart TV - Upload']['MLE']
+        parametros_chrome_down = data['Chromecast - Download']['MLE']
+        parametros_chrome_up = data['Chromecast - Upload']['MLE']
 
     # Calculo do número de bins pelo método de Sturges: k = 1 + log2(n)
     n_smart_up = len(df_smart_up)
@@ -359,10 +367,10 @@ def passo_5(df_smart_up, df_smart_down, df_chrome_up, df_chrome_down, file = "es
     # Carregar os resultados do MLE
     with open(file, 'r', encoding='utf-8') as f:
         data = json.load(f)
-        parametros_smart_down = data['Smart TV - Download']['MLE Gaussiana']
-        parametros_smart_up = data['Smart TV - Upload']['MLE Gaussiana']
-        parametros_chrome_down = data['Chromecast - Download']['MLE Gaussiana']
-        parametros_chrome_up = data['Chromecast - Upload']['MLE Gaussiana']
+        parametros_smart_down = data['Smart TV - Download']['MLE']
+        parametros_smart_up = data['Smart TV - Upload']['MLE']
+        parametros_chrome_down = data['Chromecast - Download']['MLE']
+        parametros_chrome_up = data['Chromecast - Upload']['MLE']
 
     # plot da distribuição gaussiana
     plt.figure(figsize=(12, 6))
@@ -402,6 +410,51 @@ def passo_5(df_smart_up, df_smart_down, df_chrome_up, df_chrome_down, file = "es
         plt.savefig('caracterizando_os_horarios/probplot_gamma.png')
     plt.show()
 
+# Q Q plot comparando os datasets 1 e 3, e os datasets 2 e 4
+def passo_6(df_smart_up, df_smart_down, df_chrome_up, df_chrome_down, salvar=False):
+    # Ordenar os dados
+    smart_up_sorted = np.sort(df_smart_up['bytes_up'])
+    chrome_up_sorted = np.sort(df_chrome_up['bytes_up'])
+    smart_down_sorted = np.sort(df_smart_down['bytes_down'])
+    chrome_down_sorted = np.sort(df_chrome_down['bytes_down'])
+
+    # Quantis para os conjuntos menores
+    quantis_smart_up = np.linspace(0, 1, len(smart_up_sorted))
+    quantis_chrome_up = np.linspace(0, 1, len(chrome_up_sorted))
+    quantis_smart_down = np.linspace(0, 1, len(smart_down_sorted))
+    quantis_chrome_down = np.linspace(0, 1, len(chrome_down_sorted))
+
+    # Interpolação linear para alinhar os conjuntos
+    chrome_up_interp = np.interp(quantis_smart_up, quantis_chrome_up, chrome_up_sorted)
+    chrome_down_interp = np.interp(quantis_smart_down, quantis_chrome_down, chrome_down_sorted)
+
+    # Plot do QQ Plot para upload
+    plt.figure(figsize=(10, 5))
+    plt.subplot(1, 2, 1)
+    plt.scatter(smart_up_sorted, chrome_up_interp, alpha=0.6)
+    plt.plot([smart_up_sorted.min(), smart_up_sorted.max()], [smart_up_sorted.min(), smart_up_sorted.max()], 'r--')
+    plt.title("QQ Plot: Smart TV Upload vs. Chromecast Upload")
+    plt.xlabel("Smart TV Upload Quantiles")
+    plt.ylabel("Chromecast Upload Quantiles")
+    plt.grid(True)
+
+    # Plot do QQ Plot para download
+    plt.subplot(1, 2, 2)
+    plt.scatter(smart_down_sorted, chrome_down_interp, alpha=0.6)
+    plt.plot([smart_down_sorted.min(), smart_down_sorted.max()], [smart_down_sorted.min(), smart_down_sorted.max()], 'r--')
+    plt.title("QQ Plot: Smart TV Download vs. Chromecast Download")
+    plt.xlabel("Smart TV Download Quantiles")
+    plt.ylabel("Chromecast Download Quantiles")
+    plt.grid(True)
+
+    plt.tight_layout()
+    if salvar:
+        plt.savefig('caracterizando_os_horarios/qq_plot.png')
+    plt.show()
+
+
+
+
 if __name__ == '__main__':
     # # passo 1: criar datasets com a maior taxa de upload e download por dispositivo
     # df1, df2 = preprocessamento()
@@ -423,6 +476,9 @@ if __name__ == '__main__':
     # # passo 4: plotar histograma, pdf gaussiana e pdf gamma na mesma figura
     # passo_4(dataset_1, dataset_2, dataset_3, dataset_4, file = "caracterizando_os_horarios/estatisticas_mle.json", salvar = True)
 
-    # passo 5: probability plot para cada distribuição usando os parametros do MLE
-    passo_5(dataset_1, dataset_2, dataset_3, dataset_4, file = "caracterizando_os_horarios/estatisticas_mle.json", salvar = True)
+    # # passo 5: probability plot para cada distribuição usando os parametros do MLE
+    # passo_5(dataset_1, dataset_2, dataset_3, dataset_4, file = "caracterizando_os_horarios/estatisticas_mle.json", salvar = True)
+
+    # # passo 6: Q Q plot comparando os datasets 1 e 3, e os datasets 2 e 4
+    passo_6(dataset_1, dataset_2, dataset_3, dataset_4, salvar=True)
 
