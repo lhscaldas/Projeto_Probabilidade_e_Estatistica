@@ -1,0 +1,66 @@
+{
+    "Smart TV - Download": {
+        "MLE Gaussiana": {
+            "media": 3.3960945564366285,
+            "variancia": 6.201343416537702,
+            "a": 1.859832210791802,
+            "b": 1.826022012486159
+        },
+        "MLE Gamma": {
+            "media": 3.3960945564366285,
+            "variancia": 6.201343416537702,
+            "a": 1.859832210791802,
+            "b": 1.826022012486159
+        },
+        "Likelihood Gaussiana": 0.0,
+        "Likelihood Gamma": 0.0
+    },
+    "Smart TV - Upload": {
+        "MLE Gaussiana": {
+            "media": 3.124258107506722,
+            "variancia": 3.1687396722858607,
+            "a": 3.0804009580503395,
+            "b": 1.0142374807869625
+        },
+        "MLE Gamma": {
+            "media": 3.124258107506722,
+            "variancia": 3.1687396722858607,
+            "a": 3.0804009580503395,
+            "b": 1.0142374807869625
+        },
+        "Likelihood Gaussiana": 0.0,
+        "Likelihood Gamma": 0.0
+    },
+    "Chromecast - Download": {
+        "MLE Gaussiana": {
+            "media": 4.052698112658847,
+            "variancia": 2.15935911604656,
+            "a": 7.606128073045557,
+            "b": 0.5328201252646161
+        },
+        "MLE Gamma": {
+            "media": 4.052698112658847,
+            "variancia": 2.15935911604656,
+            "a": 7.606128073045557,
+            "b": 0.5328201252646161
+        },
+        "Likelihood Gaussiana": 0.0,
+        "Likelihood Gamma": 0.0
+    },
+    "Chromecast - Upload": {
+        "MLE Gaussiana": {
+            "media": 3.521546370674634,
+            "variancia": 0.5957117566059503,
+            "a": 20.817599624804544,
+            "b": 0.1691619799661556
+        },
+        "MLE Gamma": {
+            "media": 3.521546370674634,
+            "variancia": 0.5957117566059503,
+            "a": 20.817599624804544,
+            "b": 0.1691619799661556
+        },
+        "Likelihood Gaussiana": 0.0,
+        "Likelihood Gamma": 0.0
+    }
+}

@@ -22,7 +22,7 @@ Os dados são analisados independentemente do horário de coleta. As métricas i
 ### [Estatísticas por horário](c_estatisticas_por_horario.py)
 A análise considera o horário de coleta, calculando box plots, médias, variâncias e desvios padrão para cada hora. Os gráficos devem mostrar as tendências diárias para upload e download, destacando diferenças e padrões únicos entre os dispositivos.
 
-### [Caracterizando os horários com maior valor de tráfego](d_caracterizando.py)
+### [Caracterizando os horários com maior valor de tráfego](d_caracterizando_os_horarios.py)
 Os dois horários com maior média para upload e download são identificados para cada dispositivo. São gerados histogramas, estimativas de máxima verossimilhança (MLE) para distribuições Gaussiana e Gamma, e gráficos comparativos (Probability Plot e QQ Plot) para verificar se os dados se ajustam a essas distribuições.
 
 ### [Análise da correlação entre as taxas de upload e download]()
