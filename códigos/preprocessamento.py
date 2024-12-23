@@ -1,15 +1,9 @@
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-import matplotlib.ticker as ticker
-import seaborn as sns
-from math import ceil
-import os
 
 # Função para Análise Exploratória de Dados
 def eda(salvar=False):
     # carregando o dataset
-    print("Current working directory:", os.getcwd())
     df_smart = pd.read_csv('dados/dataset_smart-tv.csv')
     df_chrome = pd.read_csv('dados/dataset_chromecast.csv')
 
@@ -98,6 +92,6 @@ def preprocessamento(salvar=False):
         print(df_chrome.head())
 
 if __name__ == '__main__':
-    salvar = True
+    salvar = False
     eda(salvar=salvar)
     preprocessamento(salvar=salvar)
