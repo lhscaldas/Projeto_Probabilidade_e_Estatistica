@@ -25,7 +25,7 @@ A análise considera o horário de coleta, calculando box plots, médias, variâ
 ### [Caracterizando os horários com maior valor de tráfego](d_caracterizando_os_horarios.py)
 Os dois horários com maior média para upload e download são identificados para cada dispositivo. São gerados histogramas, estimativas de máxima verossimilhança (MLE) para distribuições Gaussiana e Gamma, e gráficos comparativos (Probability Plot e QQ Plot) para verificar se os dados se ajustam a essas distribuições.
 
-### [Análise da correlação entre as taxas de upload e download]()
+### [Análise da correlação entre as taxas de upload e download](e_correlação.py)
 A correlação entre upload e download é investigada para os horários de maior tráfego, calculando coeficientes de correlação e utilizando scatter plots. A análise avalia a relação entre as taxas para cada dispositivo.
 
 ### [Comparação dos dados gerados pelos dispositivos Smart-TV e Chromecast]()
