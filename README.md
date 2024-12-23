@@ -28,7 +28,7 @@ Os dois horários com maior média para upload e download são identificados par
 ### [Análise da correlação entre as taxas de upload e download](e_correlação.py)
 A correlação entre upload e download é investigada para os horários de maior tráfego, calculando coeficientes de correlação e utilizando scatter plots. A análise avalia a relação entre as taxas para cada dispositivo.
 
-### [Comparação dos dados gerados pelos dispositivos Smart-TV e Chromecast]()
+### [Comparação dos dados gerados pelos dispositivos Smart-TV e Chromecast](f_G_test.py)
 Utilizando o teste estatístico G (G-test), compara-se a similaridade entre as distribuições de upload e download dos dois dispositivos nos horários de maior tráfego. Os histogramas devem ser padronizados para permitir a comparação.
 
 ### [Relatório]
