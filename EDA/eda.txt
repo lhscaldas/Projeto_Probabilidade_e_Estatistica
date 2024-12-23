@@ -1,0 +1,36 @@
+Smart TV - Primeiras linhas
+   device_id            date_hour       bytes_up    bytes_down
+0   77209603  2021-11-22 15:23:00  132932.983607  2.818140e+06
+1   77209603  2021-11-22 15:24:00  115770.491803  2.264410e+06
+2   77209603  2021-11-22 15:25:00  114030.032787  2.309270e+06
+3   77209603  2021-11-22 15:26:00   97170.622951  2.006544e+06
+4   77209603  2021-11-22 15:27:00   39569.573770  8.061440e+05
+
+Chromecast - Primeiras linhas
+   device_id            date_hour     bytes_up    bytes_down
+0   66161985  2021-09-06 00:01:00  2987.016393  49185.704918
+1   66161985  2021-09-06 00:02:00   685.935484    328.258065
+2   66161985  2021-09-06 00:03:00  4493.901639  37914.064516
+3   66161985  2021-09-06 00:04:00   776.133333    229.200000
+4   66161985  2021-09-06 00:05:00  3081.311475  51656.800000
+
+Smart TV - Dimensões: (4417903, 4)
+Chromecast - Dimensões: (1620529, 4)
+Smart TV - Dados faltantes
+device_id     0
+date_hour     0
+bytes_up      0
+bytes_down    0
+dtype: int64
+
+Chromecast - Dados faltantes
+device_id     0
+date_hour     0
+bytes_up      0
+bytes_down    0
+dtype: int64
+
+Smart TV - Valores zero: bytes_up=1803853, bytes_down=1978337
+Chromecast - Valores zero: bytes_up=6057, bytes_down=4099
+Smart TV - Valores negativos: bytes_up=0, bytes_down=0
+Chromecast - Valores negativos: bytes_up=0, bytes_down=0

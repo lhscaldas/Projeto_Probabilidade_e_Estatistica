@@ -1,7 +1,77 @@
-\section{introdução}
+\section{Introdução}
 
 \subsection{Objetivo}
 
-\subsection{Análise Exploratória dos \textit{Datasets}}
+O objetivo deste trabalho é realizar uma análise de um conjunto de dados reais fornecidos por um provedor de Internet de médio porte, avaliando as taxas de upload e download de dispositivos domésticos, especificamente Smart-TVs e Chromecasts, com base na teoria aprendida em classe, destacando a importância de uma análise crítica dos resultados obtidos.
 
-\subsection{Pré-processamento dos Dados}
+\subsection{Análise Exploratória dos Dados}
+
+A análise exploratória foi realizada para compreender as características principais dos dados obtidos dos dispositivos Smart TV e Chromecast. Os resultados estão detalhados abaixo:
+
+\begin{itemize}
+    \item \textbf{Primeiras linhas dos dados:}
+    \begin{itemize}
+        \item \textbf{Smart TV:}
+        \begin{verbatim}
+        device_id            date_hour       bytes_up    bytes_down
+        0   77209603  2021-11-22 15:23:00  132932.983607  2.818140e+06
+        1   77209603  2021-11-22 15:24:00  115770.491803  2.264410e+06
+        2   77209603  2021-11-22 15:25:00  114030.032787  2.309270e+06
+        3   77209603  2021-11-22 15:26:00   97170.622951  2.006544e+06
+        4   77209603  2021-11-22 15:27:00   39569.573770  8.061440e+05
+        \end{verbatim}
+        
+        \item \textbf{Chromecast:}
+        \begin{verbatim}
+        device_id            date_hour     bytes_up    bytes_down
+        0   66161985  2021-09-06 00:01:00  2987.016393  49185.704918
+        1   66161985  2021-09-06 00:02:00   685.935484    328.258065
+        2   66161985  2021-09-06 00:03:00  4493.901639  37914.064516
+        3   66161985  2021-09-06 00:04:00   776.133333    229.200000
+        4   66161985  2021-09-06 00:05:00  3081.311475  51656.800000
+        \end{verbatim}
+    \end{itemize}
+    
+    \item \textbf{Dimensões dos dados:}
+    \begin{itemize}
+        \item Smart TV: (4417903, 4)
+        \item Chromecast: (1620529, 4)
+    \end{itemize}
+
+    \item \textbf{Dados faltantes:}
+    \begin{itemize}
+        \item Smart TV: Nenhum valor faltante em \texttt{device\_id}, \texttt{date\_hour}, \texttt{bytes\_up}, \texttt{bytes\_down}.
+        \item Chromecast: Nenhum valor faltante em \texttt{device\_id}, \texttt{date\_hour}, \texttt{bytes\_up}, \texttt{bytes\_down}.
+    \end{itemize}
+
+    \item \textbf{Valores zero:}
+    \begin{itemize}
+        \item Smart TV: \texttt{bytes\_up} = 1.803.853, \texttt{bytes\_down} = 1.978.337.
+        \item Chromecast: \texttt{bytes\_up} = 6.057, \texttt{bytes\_down} = 4.099.
+    \end{itemize}
+
+    \item \textbf{Valores negativos:}
+    \begin{itemize}
+        \item Smart TV: Nenhum valor negativo em \texttt{bytes\_up} ou \texttt{bytes\_down}.
+        \item Chromecast: Nenhum valor negativo em \texttt{bytes\_up} ou \texttt{bytes\_down}.
+    \end{itemize}
+\end{itemize}
+
+
+\subsection{Pré-processamento}
+
+O pré-processamento foi realizado para preparar os dados dos dispositivos Smart TV e Chromecast para análises posteriores. As etapas realizadas são descritas a seguir:
+
+\begin{itemize}
+    \item \textbf{Carregamento dos dados:} Os dados foram lidos a partir dos arquivos \texttt{dataset\_smart-tv.csv} e \texttt{dataset\_chromecast.csv}.
+
+    \item \textbf{Correção de valores zero:} Como as colunas \texttt{bytes\_up} e \texttt{bytes\_down} apresentavam valores zero, foi aplicado um \textit{shift} de +1 a todos os valores dessas colunas para evitar problemas no cálculo do logaritmo.
+
+    \item \textbf{Reescalonamento dos dados:} Os valores das colunas \texttt{bytes\_up} e \texttt{bytes\_down} foram transformados para a escala logarítmica na base 10 (\texttt{log10}), devido à grande variação na ordem de grandeza desses valores.
+
+    \item \textbf{Ordenação temporal:} Os dados foram ordenados pela coluna \texttt{date\_hour} para garantir a consistência temporal nas análises subsequentes.
+
+    \item \textbf{Salvamento dos dados processados:} Os datasets resultantes podem ser salvos como arquivos CSV (\texttt{smart\_preprocessado.csv} e \texttt{chrome\_preprocessado.csv}) para uso posterior.
+\end{itemize}
+
+Essa etapa garante que os dados estejam limpos, reescalonados e organizados, facilitando análises estatísticas e a geração de gráficos. Além disso, a transformação logarítmica reduz a influência de valores extremos, melhorando a interpretação dos resultados. 
