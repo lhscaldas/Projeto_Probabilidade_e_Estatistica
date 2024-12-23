@@ -1,4 +1,0 @@
-Smart TV - Download: média=2.35, variância=6.72, desvio padrão=2.59
-Smart TV - Upload: média=2.16, variância=4.11, desvio padrão=2.03
-Chromecast - Download: média=3.80, variância=1.66, desvio padrão=1.29
-Chromecast - Upload: média=3.35, variância=0.46, desvio padrão=0.68
