@@ -1,7 +1,9 @@
-from codigos.preprocessamento import *
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from math import ceil
 from scipy import stats
-from scipy.special import digamma
-from scipy.optimize import newton
 from scipy.stats import gamma
 from scipy.stats import kstest
 import json
@@ -26,10 +28,10 @@ def passo_1(df_smart, df_chrome, horarios, salvar=False):
 
     # Salvar os 4 datasets em 4 arquivos csv
     if salvar:
-        df_smart_up.to_csv('dataset_1.csv', index=False)
-        df_smart_down.to_csv('dataset_2.csv', index=False)
-        df_chrome_up.to_csv('dataset_3.csv', index=False)
-        df_chrome_down.to_csv('dataset_4.csv', index=False)
+        df_smart_up.to_csv('dados/dataset_1.csv', index=False)
+        df_smart_down.to_csv('dados/dataset_2.csv', index=False)
+        df_chrome_up.to_csv('dados/dataset_3.csv', index=False)
+        df_chrome_down.to_csv('dados/dataset_4.csv', index=False)
 
     return df_smart_up, df_smart_down, df_chrome_up, df_chrome_down
 
@@ -87,7 +89,7 @@ def passo_2(df_smart_up, df_smart_down, df_chrome_up, df_chrome_down, salvar = F
     # Ajustar layout e exibir o gráfico
     plt.tight_layout()
     if salvar:
-        plt.savefig('caracterizando_os_horarios/histogramas.png')
+        plt.savefig('caracterizando os horários/histogramas.png')
     plt.show()
 
 # Cálculo do MLE para distribuição Gaussiana e Gamma
@@ -218,7 +220,7 @@ def passo_3(df_smart_up, df_smart_down, df_chrome_up, df_chrome_down, salvar = F
         }
 
         # Escrever os dados no arquivo JSON
-        with open('caracterizando_os_horarios/estatisticas_mle.json', 'w', encoding='utf-8') as f:
+        with open('caracterizando os horários/estatisticas_mle.json', 'w', encoding='utf-8') as f:
             json.dump(data, f, ensure_ascii=False, indent=4)
 
 # Plotar histograma, pdf gaussiana e pdf gamma na mesma figura
@@ -308,7 +310,7 @@ def passo_4(df_smart_up, df_smart_down, df_chrome_up, df_chrome_down, file = "es
     # Ajustar layout e exibir o gráfico
     plt.tight_layout()
     if salvar:
-        plt.savefig('caracterizando_os_horarios/histogramas_pdf.png')
+        plt.savefig('caracterizando os horários/histogramas_pdf.png')
     plt.show()
 
 # probability plot comparando o dataset com uma distribuição normal parametrizada
@@ -388,7 +390,7 @@ def passo_5(df_smart_up, df_smart_down, df_chrome_up, df_chrome_down, file = "es
     plt.title('Chromecast - Download')
     plt.tight_layout()
     if salvar:
-        plt.savefig('caracterizando_os_horarios/probplot.png')
+        plt.savefig('caracterizando os horários/probplot.png')
     plt.show()
 
     # plot da distribuição gamma
@@ -407,7 +409,7 @@ def passo_5(df_smart_up, df_smart_down, df_chrome_up, df_chrome_down, file = "es
     plt.title('Chromecast - Download')
     plt.tight_layout()
     if salvar:
-        plt.savefig('caracterizando_os_horarios/probplot_gamma.png')
+        plt.savefig('caracterizando os horários/probplot_gamma.png')
     plt.show()
 
 # Q Q plot comparando os datasets 1 e 3, e os datasets 2 e 4
@@ -449,36 +451,42 @@ def passo_6(df_smart_up, df_smart_down, df_chrome_up, df_chrome_down, salvar=Fal
 
     plt.tight_layout()
     if salvar:
-        plt.savefig('caracterizando_os_horarios/qq_plot.png')
+        plt.savefig('caracterizando os horários/qq_plot.png')
     plt.show()
 
 
 
 
 if __name__ == '__main__':
-    # # passo 1: criar datasets com a maior taxa de upload e download por dispositivo
-    # df1, df2 = preprocessamento()
-    # horarios_maior_media = {'smart_up': 20, 'smart_down': 20, 'chrome_up': 22, 'chrome_down': 23}
-    # dataset_1, dataset_2, dataset_3, dataset_4 = passo_1(df1, df2, horarios_maior_media, salvar=True)
+    # Salvar os resultados
+    salvar = False
+
+    # Carregar os dados
+    df1 = pd.read_csv('dados/smart_preprocessado.csv')
+    df2 = pd.read_csv('dados/chrome_preprocessado.csv')
+
+    # passo 1: criar datasets com a maior taxa de upload e download por dispositivo
+    horarios_maior_media = {'smart_up': 20, 'smart_down': 20, 'chrome_up': 22, 'chrome_down': 23}
+    dataset_1, dataset_2, dataset_3, dataset_4 = passo_1(df1, df2, horarios_maior_media, salvar=salvar)
 
     # Carregando os 4 datasets
-    dataset_1 = pd.read_csv('dataset_1.csv')
-    dataset_2 = pd.read_csv('dataset_2.csv')
-    dataset_3 = pd.read_csv('dataset_3.csv')
-    dataset_4 = pd.read_csv('dataset_4.csv')
+    dataset_1 = pd.read_csv('dados/dataset_1.csv')
+    dataset_2 = pd.read_csv('dados/dataset_2.csv')
+    dataset_3 = pd.read_csv('dados/dataset_3.csv')
+    dataset_4 = pd.read_csv('dados/dataset_4.csv')
         
-    # # passo 2: histograma dos datasets (bins = 19, 19, 18, 18)
-    # passo_2(dataset_1, dataset_2, dataset_3, dataset_4, salvar=True)
+    # passo 2: histograma dos datasets (bins = 19, 19, 18, 18)
+    passo_2(dataset_1, dataset_2, dataset_3, dataset_4, salvar=salvar)
 
-    # # passo 3: cálculo do MLE para distribuição Gaussiana e Gamma
-    # passo_3(dataset_1, dataset_2, dataset_3, dataset_4, salvar=True)
+    # passo 3: cálculo do MLE para distribuição Gaussiana e Gamma
+    passo_3(dataset_1, dataset_2, dataset_3, dataset_4, salvar=salvar)
 
-    # # passo 4: plotar histograma, pdf gaussiana e pdf gamma na mesma figura
-    # passo_4(dataset_1, dataset_2, dataset_3, dataset_4, file = "caracterizando_os_horarios/estatisticas_mle.json", salvar = True)
+    # passo 4: plotar histograma, pdf gaussiana e pdf gamma na mesma figura
+    passo_4(dataset_1, dataset_2, dataset_3, dataset_4, file = "caracterizando os horários/estatisticas_mle.json", salvar = salvar)
 
-    # # passo 5: probability plot para cada distribuição usando os parametros do MLE
-    # passo_5(dataset_1, dataset_2, dataset_3, dataset_4, file = "caracterizando_os_horarios/estatisticas_mle.json", salvar = True)
+    # passo 5: probability plot para cada distribuição usando os parametros do MLE
+    passo_5(dataset_1, dataset_2, dataset_3, dataset_4, file = "caracterizando os horários/estatisticas_mle.json", salvar = salvar)
 
     # # passo 6: Q Q plot comparando os datasets 1 e 3, e os datasets 2 e 4
-    passo_6(dataset_1, dataset_2, dataset_3, dataset_4, salvar=True)
+    passo_6(dataset_1, dataset_2, dataset_3, dataset_4, salvar=salvar)
 

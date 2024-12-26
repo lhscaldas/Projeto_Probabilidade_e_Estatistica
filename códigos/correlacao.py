@@ -1,4 +1,6 @@
-from codigos.preprocessamento import *
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
 
 # Ajustar os dados para o mesmo tamanho usando interpolação
 def ajustar_tamanho(df1, df2):
@@ -41,7 +43,7 @@ def correlacao(df_smart_up, df_smart_down, df_chrome_up, df_chrome_down, salvar=
 
     # Salvar em arquivo
     if salvar:
-        with open('correlacao/correlacao.txt', 'w') as f:
+        with open('correlação/correlacao.txt', 'w') as f:
             f.write('Correlacao entre as taxas de upload dos datasets 1 e 3: {:.6f}\n'.format(correlacao_up))
             f.write('Correlacao entre as taxas de download dos datasets 2 e 4: {:.6f}\n'.format(correlacao_down))
     
@@ -68,24 +70,27 @@ def scatter_plot(df_smart_up, df_smart_down, df_chrome_up, df_chrome_down, salva
 
     # Salvar em arquivo
     if salvar:
-        plt.savefig('correlacao/scatter_plot.png')
+        plt.savefig('correlação/scatter_plot.png')
     plt.show()
 
 if __name__ == '__main__':
+    # Salvar os resultados
+    salvar = False
+    
     # Carregar os datasets
-    dataset_1 = pd.read_csv('dataset_1.csv')
-    dataset_2 = pd.read_csv('dataset_2.csv')
-    dataset_3 = pd.read_csv('dataset_3.csv')
-    dataset_4 = pd.read_csv('dataset_4.csv')
+    dataset_1 = pd.read_csv('dados/dataset_1.csv')
+    dataset_2 = pd.read_csv('dados/dataset_2.csv')
+    dataset_3 = pd.read_csv('dados/dataset_3.csv')
+    dataset_4 = pd.read_csv('dados/dataset_4.csv')
 
     # Ajustar os dados para o mesmo tamanho e ordená-los por tempo usando interpolação
     dataset_1, dataset_2 = ajustar_tamanho(dataset_1, dataset_2)
     dataset_3, dataset_4 = ajustar_tamanho(dataset_3, dataset_4)
 
     # Calcular correlacao
-    correlacao_up, correlacao_down = correlacao(dataset_1, dataset_2, dataset_3, dataset_4, salvar=True)
+    correlacao_up, correlacao_down = correlacao(dataset_1, dataset_2, dataset_3, dataset_4, salvar=salvar)
     print('Correlacao entre as taxas de upload dos datasets 1 e 3:', correlacao_up)
     print('Correlacao entre as taxas de download dos datasets 2 e 4:', correlacao_down)
 
     # Gerar scatter plot
-    scatter_plot(dataset_1, dataset_2, dataset_3, dataset_4, salvar=True)
+    scatter_plot(dataset_1, dataset_2, dataset_3, dataset_4, salvar=salvar)

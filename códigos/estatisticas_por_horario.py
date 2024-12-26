@@ -1,4 +1,6 @@
-from codigos.preprocessamento import *
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 # Função para calcular as estadísticas por hora
 def estatisticas_por_hora(df_smart, df_chrome, salvar = False):
@@ -8,7 +10,7 @@ def estatisticas_por_hora(df_smart, df_chrome, salvar = False):
 
     # Zerar o arquivo de texto
     if salvar:
-        with open('estatisticas_por_hora/estatisticas_por_hora.txt', 'w', encoding='utf-8') as f:
+        with open('estatísticas por hora/estatisticas_por_hora.txt', 'w', encoding='utf-8') as f:
             f.write('')
 
     # Loop para percorrer as horas
@@ -55,7 +57,7 @@ def estatisticas_por_hora(df_smart, df_chrome, salvar = False):
 
         # salvar as estatísticas em um arquivo de texto
         if salvar:
-            with open('estatisticas_por_hora/estatisticas_por_hora.txt', 'a', encoding='utf-8') as f:
+            with open('estatísticas por hora/estatisticas_por_hora.txt', 'a', encoding='utf-8') as f:
                 f.write(f'Hora {hour}: Smart TV - Download: média={media_smart_down:.2f}, variância={variancia_smart_down:.2f}, desvio padrão={desvio_smart_down:.2f}\n')
                 f.write(f'Hora {hour}: Smart TV - Upload: média={media_smart_up:.2f}, variância={variancia_smart_up:.2f}, desvio padrão={desvio_smart_up:.2f}\n')
                 f.write(f'Hora {hour}: Chromecast - Download: média={media_chrome_down:.2f}, variância={variancia_chrome_down:.2f}, desvio padrão={desvio_chrome_down:.2f}\n')
@@ -75,7 +77,7 @@ def boxplots_por_hora(df_smart, df_chrome, salvar = False):
     plt.xlabel('Hora')
     plt.ylabel('bps (log10)')
     if salvar:
-        plt.savefig('estatisticas_por_hora/boxplot_smart_down.png')
+        plt.savefig('estatísticas por hora/boxplot_smart_down.png')
     plt.show()
 
     # Plot dos boxplot de upload por hora para Smart TV
@@ -85,7 +87,7 @@ def boxplots_por_hora(df_smart, df_chrome, salvar = False):
     plt.xlabel('Hora')
     plt.ylabel('bps (log10)')
     if salvar:
-        plt.savefig('estatisticas_por_hora/boxplot_smart_up.png')
+        plt.savefig('estatísticas por hora/boxplot_smart_up.png')
     plt.show()
 
     # Plot dos boxplot de download por hora para Chromecast
@@ -95,7 +97,7 @@ def boxplots_por_hora(df_smart, df_chrome, salvar = False):
     plt.xlabel('Hora')
     plt.ylabel('bps (log10)')
     if salvar:
-        plt.savefig('estatisticas_por_hora/boxplot_chrome_down.png')
+        plt.savefig('estatísticas por hora/boxplot_chrome_down.png')
     plt.show()
 
     # Plot dos boxplot de upload por hora para Chromecast
@@ -105,15 +107,20 @@ def boxplots_por_hora(df_smart, df_chrome, salvar = False):
     plt.xlabel('Hora')
     plt.ylabel('bps (log10)')
     if salvar:
-        plt.savefig('estatisticas_por_hora/boxplot_chrome_up.png')
+        plt.savefig('estatísticas por hora/boxplot_chrome_up.png')
     plt.show()
     
 
 if __name__ == '__main__':
-    df1, df2 = preprocessamento()
+    # Salvar os resultados
+    salvar = False
+
+    # Carregar os dados
+    df1 = pd.read_csv('dados/smart_preprocessado.csv')
+    df2 = pd.read_csv('dados/chrome_preprocessado.csv')
 
     # Estatísticas por hora
-    medias_smart, variancias_smart, desvios_smart, medias_chrome, variancias_chrome, desvios_chrome = estatisticas_por_hora(df1, df2)
+    medias_smart, variancias_smart, desvios_smart, medias_chrome, variancias_chrome, desvios_chrome = estatisticas_por_hora(df1, df2, salvar=salvar)
     
     # Boxplots por hora
-    boxplots_por_hora(df1, df2)
+    boxplots_por_hora(df1, df2, salvar=salvar)

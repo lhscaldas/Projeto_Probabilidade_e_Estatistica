@@ -1,4 +1,5 @@
-from codigos.preprocessamento import *
+import numpy as np
+import pandas as pd
 from scipy.stats import chi2
 import json
 
@@ -64,14 +65,14 @@ def G_test(dataset1, dataset2, bins='auto', salvar=False):
 
 
 if __name__ == '__main__':
-    # Salvar
-    salvar = True
+    # Salvar os resultados
+    salvar = False
 
     # Carregar os datasets
-    dataset_1 = pd.read_csv('dataset_1.csv')
-    dataset_2 = pd.read_csv('dataset_2.csv')
-    dataset_3 = pd.read_csv('dataset_3.csv')
-    dataset_4 = pd.read_csv('dataset_4.csv')
+    dataset_1 = pd.read_csv('dados/dataset_1.csv')
+    dataset_2 = pd.read_csv('dados/dataset_2.csv')
+    dataset_3 = pd.read_csv('dados/dataset_3.csv')
+    dataset_4 = pd.read_csv('dados/dataset_4.csv')
 
     # Teste de hipótese G
     bins = 18
