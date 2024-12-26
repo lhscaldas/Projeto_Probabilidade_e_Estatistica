@@ -1,16 +1,10 @@
 \section{Estatísticas Gerais}
 
-Nesta seção, são apresentadas as estatísticas gerais dos dados coletados para os dispositivos Smart TV e Chromecast, sem considerar o horário em que os dados foram gerados. As análises incluem cálculos de medidas descritivas, como média, variância e desvio padrão, além de representações gráficas através de histogramas, boxplots e funções de distribuição empírica (ECDF). 
+Nesta seção, apresentamos as estatísticas gerais dos dados coletados para os dispositivos Smart TV e Chromecast. As análises incluem cálculos de medidas descritivas, como média, variância e desvio padrão, além de representações gráficas através de histogramas, boxplots e funções de distribuição empírica (ECDF). 
 
 \subsection{Medidas Descritivas}
 
-As medidas descritivas para as taxas de upload e download (em escala logarítmica base 10) estão resumidas na Tabela~\ref{tab:estatisticas}. Para determinar o número adequado de bins para os histogramas, utilizamos a fórmula de Sturges:
-
-\begin{equation}
-k = 1 + \log_2(n),
-\end{equation}
-
-onde \(n\) é o número total de amostras. Este método busca otimizar a visualização dos dados ao balancear granularidade e clareza.
+As medidas descritivas para as taxas de upload e download (em escala logarítmica base 10) estão resumidas na Tabela~\ref{tab:estatisticas}. 
 
 \begin{table}[H]
 \centering
@@ -26,12 +20,6 @@ Chromecast & Download & 3.80 & 1.29 \\ \hline
 \end{tabular}
 \end{table}
 
-O número de bins calculado para cada dispositivo, arredondando para cima, é o seguinte:
-\begin{itemize}
-    \item \textbf{Smart TV:} \(k = 24\) bins.
-    \item \textbf{Chromecast:} \(k = 22\) bins.
-\end{itemize}
-
 \subsection{Visualizações Gráficas}
 
 Para compreender melhor a distribuição dos dados, utilizamos as seguintes representações gráficas:
@@ -40,6 +28,20 @@ Para compreender melhor a distribuição dos dados, utilizamos as seguintes repr
     \item \textbf{Histogramas:} As distribuições das taxas de upload e download para cada dispositivo estão representadas nos histogramas da Figura~\ref{fig:histogramas}.
     \item \textbf{Boxplots:} A Figura~\ref{fig:boxplots} mostra os boxplots comparando as taxas de upload e download entre Smart TV e Chromecast.
     \item \textbf{ECDF:} As funções de distribuição empírica, exibidas na Figura~\ref{fig:ecdf}, demonstram a probabilidade acumulada para cada valor das taxas.
+\end{itemize}
+
+Para a construção dos histogramas, o número de bins foi calculado utilizando o método de Sturges:
+
+\begin{equation}
+k = 1 + \log_2(n),
+\end{equation}
+
+onde \(n\) é o número total de amostras. Este método busca otimizar a visualização dos dados ao balancear granularidade e clareza.
+
+O número de bins calculado para cada dispositivo é o seguinte:
+\begin{itemize}
+    \item \textbf{Smart TV:} \(k = 24\) bins.
+    \item \textbf{Chromecast:} \(k = 22\) bins.
 \end{itemize}
 
 \begin{figure}[H]
@@ -65,10 +67,16 @@ Para compreender melhor a distribuição dos dados, utilizamos as seguintes repr
 
 \subsection{Análise dos Resultados}
 
-Os resultados indicam que as taxas de upload e download apresentam características distintas entre os dispositivos:
-\begin{itemize}
-    \item \textbf{Smart TV:} As taxas exibem maior variação, refletida em desvios padrão mais elevados. 
-    \item \textbf{Chromecast:} As taxas são mais concentradas, indicando menor dispersão nos valores.
-\end{itemize}
+Os resultados destacam diferenças importantes nas características das taxas de upload e download entre os dispositivos Smart TV e Chromecast.
 
-Essas diferenças podem ser atribuídas aos diferentes padrões de uso e capacidades técnicas dos dispositivos, como consumo contínuo em Smart TVs e interações esporádicas em Chromecasts.
+\begin{itemize}
+
+\item \textbf{Smart TV:} 
+As taxas de upload e download da Smart TV possuem médias parecidas e desvios padrão relativamente altos, indicando uma dispersão maior dos dados. As taxas estão predominantemente concentradas em valores baixos, especialmente em valores iguais a zero, conforme já havia sido evidenciado na Análise Exploratória dos Dados (Seção~\ref{sec:eda}). Essa característica é refletida na primeira barra dos histogramas (Figura~\ref{fig:histogramas}), que é consideravelmente maior do que as demais. No boxplot (Figura~\ref{fig:boxplots}), essa concentração é representada pela proximidade do limite inferior ao primeiro quartil (\( Q1 \)). Além disso, a ECDF (Figura~\ref{fig:ecdf}) apresenta um valor inicial relativamente alto, superior a 0,4, devido à grande quantidade de valores nulos, crescendo de forma lenta até chegar ao valor máximo.
+
+\item \textbf{Chromecast:} 
+As taxas de upload e download do Chromecast também possuem médias próximas, mas apresentam desvios padrão relativamente mais baixos, indicando uma dispersão menor dos dados. A taxa de download (\texttt{bytes\_down}) exibe uma variância maior do que a de upload (\texttt{bytes\_up}). A taxa de upload apresenta muitos outliers, tanto para valores altos (picos) quanto para valores baixos (vales), como destacado no boxplot (Figura~\ref{fig:boxplots}), enquanto a taxa de download não possui nenhum. A ECDF (Figura~\ref{fig:ecdf}) reflete essa característica, apresentando um crescimento rápido após \(10^2\) bps.
+
+\item \textbf{Comparação Geral:} A Smart TV e o Chromecast apresentam diferenças marcantes em seus padrões de tráfego. Enquanto a Smart TV concentra grande parte de seus dados em valores baixos, com ausência de outliers, o Chromecast exibe menor dispersão geral, mas com muitos outliers na taxa de upload. A ECDF da Smart TV cresce de forma lenta devido aos valores nulos iniciais, enquanto a do Chromecast apresenta um crescimento rápido após \(10^2\) bps, refletindo uma concentração maior em valores intermediários. Essas diferenças sugerem que a Smart TV alterna entre períodos de inatividade e altos fluxos, enquanto o Chromecast apresenta tráfego mais estável, mas com picos e vales ocasionais no upload.
+
+\end{itemize}Essas observações podem auxiliar no desenvolvimento de estratégias de gerenciamento de rede mais eficientes, considerando a alta variabilidade e períodos de inatividade da Smart TV, e os picos de tráfego ocasionais no upload do Chromecast. Adaptar essas estratégias às características específicas de cada dispositivo pode melhorar a alocação de recursos e a experiência do usuário.
