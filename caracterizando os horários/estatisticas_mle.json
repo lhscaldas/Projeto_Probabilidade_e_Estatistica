@@ -1,50 +1,54 @@
 {
-    "Smart TV - Download": {
-        "MLE": {
-            "media": 3.3960945564366285,
-            "variancia": 6.201343416537702,
-            "a": 0.40778147671690185,
-            "b": 8.330674026164818
-        },
-        "Log-likelihood Gaussiana": -495657.6202165846,
-        "Likelihood Gaussiana": 0.0,
-        "Log-likelihood Gamma": -387106.17138631194,
-        "Likelihood Gamma": 0.0
-    },
     "Smart TV - Upload": {
         "MLE": {
             "media": 3.124258107506722,
             "variancia": 3.1687396722858607,
-            "a": 0.49365570588394597,
-            "b": 6.330845709380785
+            "a": 217.14653644297584,
+            "loc": -23.859605776366315,
+            "b": 0.12424488225923055
         },
-        "Log-likelihood Gaussiana": -424281.7272157111,
+        "Log-likelihood Gaussiana": -424281.6936679817,
         "Likelihood Gaussiana": 0.0,
-        "Log-likelihood Gamma": -406883.5248558981,
+        "Log-likelihood Gamma": -427211.8785465799,
         "Likelihood Gamma": 0.0
     },
-    "Chromecast - Download": {
+    "Smart TV - Download": {
         "MLE": {
-            "media": 4.052698112658847,
-            "variancia": 2.15935911604656,
-            "a": 4.7260886157383935,
-            "b": 0.8577279103822955
+            "media": 3.3960945564366285,
+            "variancia": 6.201343416537702,
+            "a": 896.5469322450763,
+            "loc": -71.06216506458918,
+            "b": 0.08304989773775429
         },
-        "Log-likelihood Gaussiana": -129602.61969513391,
+        "Log-likelihood Gaussiana": -495657.6030744891,
         "Likelihood Gaussiana": 0.0,
-        "Log-likelihood Gamma": -141373.21069459908,
+        "Log-likelihood Gamma": -495519.06693644583,
         "Likelihood Gamma": 0.0
     },
     "Chromecast - Upload": {
         "MLE": {
             "media": 3.521546370674634,
             "variancia": 0.5957117566059503,
-            "a": 8.765368796179578,
-            "b": 0.4018708684807364
+            "a": 3148.88152111843,
+            "loc": -39.80898262399835,
+            "b": 0.013760617086991112
         },
-        "Log-likelihood Gaussiana": -89011.49054250756,
+        "Log-likelihood Gaussiana": -89011.42613382792,
         "Likelihood Gaussiana": 0.0,
-        "Log-likelihood Gamma": -119219.41176058841,
+        "Log-likelihood Gamma": -89014.858195553,
+        "Likelihood Gamma": 0.0
+    },
+    "Chromecast - Download": {
+        "MLE": {
+            "media": 4.052698112658847,
+            "variancia": 2.15935911604656,
+            "a": 27.130143662628548,
+            "loc": -3.631368185066651,
+            "b": 0.2832298335465073
+        },
+        "Log-likelihood Gaussiana": -129602.60305871296,
+        "Likelihood Gaussiana": 0.0,
+        "Log-likelihood Gamma": -128993.34860632144,
         "Likelihood Gamma": 0.0
     }
 }

@@ -1,9 +1,10 @@
 
+import numpy as np
+import matplotlib.pyplot as plt
 
 # função que plota duas senoides com defasagem temporal
 def plot_senoides():
-    import numpy as np
-    import matplotlib.pyplot as plt
+    
 
     # cria um vetor de tempo
     t = np.linspace(0, 2*np.pi, 1000)
@@ -18,4 +19,8 @@ def plot_senoides():
     plt.legend()
     plt.show()
 
-plot_senoides()
+# plot_senoides()
+
+x=1000
+print(1+3.3219*np.log10(x))
+print(1+np.log2(x))

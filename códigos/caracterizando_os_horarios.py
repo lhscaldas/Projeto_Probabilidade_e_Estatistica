@@ -98,49 +98,38 @@ def MLE(data):
     media = np.mean(data)
     variancia = np.var(data)
 
-    # Verificar se data tem valores menores que zero
-    if (data < 0).any():
-        raise ValueError('Os dados contêm valores negativos. A distribuição Gamma não pode ser usada.')
-    
-    # Verificar se data tem valores iguais a zero
-    if (data == 0).any():
-        epsilon = 1e-3
-        print(f'Os dados contêm valores iguais a zero. Adicionando um epsilon = {epsilon} para evitar erro de log(0).\n')
-        data += epsilon
-    
     # Estimar parâmetros da gamma
-    a, loc, b = gamma.fit(data, floc=0)
+    a, loc, b = gamma.fit(data, method='MLE')
     
-    return media, variancia, a, b
+    return media, variancia, a, loc, b
 
 
 # Cálculo do MLE para distribuição Gaussiana e Gamma
 def passo_3(df_smart_up, df_smart_down, df_chrome_up, df_chrome_down, salvar = False):
 
     # Cálculo do MLE para as distribuições
-    media_smart_down, variancia_smart_down, a_smart_down, b_smart_down = MLE(df_smart_down['bytes_down'])
-    media_smart_up, variancia_smart_up, a_smart_up, b_smart_up = MLE(df_smart_up['bytes_up'])
-    media_chrome_down, variancia_chrome_down, a_chrome_down, b_chrome_down = MLE(df_chrome_down['bytes_down'])
-    media_chrome_up, variancia_chrome_up, a_chrome_up, b_chrome_up = MLE(df_chrome_up['bytes_up'])
+    media_smart_down, variancia_smart_down, a_smart_down, loc_smart_down, b_smart_down = MLE(df_smart_down['bytes_down'])
+    media_smart_up, variancia_smart_up, a_smart_up, loc_smart_up, b_smart_up = MLE(df_smart_up['bytes_up'])
+    media_chrome_down, variancia_chrome_down, a_chrome_down, loc_chrome_down, b_chrome_down = MLE(df_chrome_down['bytes_down'])
+    media_chrome_up, variancia_chrome_up, a_chrome_up, loc_chrome_up, b_chrome_up = MLE(df_chrome_up['bytes_up'])
 
     # Adicionar os resultados às listas
-    parametros_smart_up = {'media': media_smart_up, 'variancia': variancia_smart_up, 'a': a_smart_up, 'b': b_smart_up}
-    parametros_smart_down = {'media': media_smart_down, 'variancia': variancia_smart_down, 'a': a_smart_down, 'b': b_smart_down}
-    parametros_chrome_up = {'media': media_chrome_up, 'variancia': variancia_chrome_up, 'a': a_chrome_up, 'b': b_chrome_up}
-    parametros_chrome_down = {'media': media_chrome_down, 'variancia': variancia_chrome_down, 'a': a_chrome_down, 'b': b_chrome_down}
+    parametros_smart_up = {'media': media_smart_up, 'variancia': variancia_smart_up, 'a': a_smart_up, 'loc': loc_smart_up, 'b': b_smart_up}
+    parametros_smart_down = {'media': media_smart_down, 'variancia': variancia_smart_down, 'a': a_smart_down, 'loc': loc_smart_down, 'b': b_smart_down}
+    parametros_chrome_up = {'media': media_chrome_up, 'variancia': variancia_chrome_up, 'a': a_chrome_up, 'loc': loc_chrome_up, 'b': b_chrome_up}
+    parametros_chrome_down = {'media': media_chrome_down, 'variancia': variancia_chrome_down, 'a': a_chrome_down, 'loc': loc_chrome_down, 'b': b_chrome_down}
 
     # Calcular a log-likelihood para a distribuição Gaussiana
-    epsilon = 1e-10
-    log_likelihood_smart_up_gaussiana = np.sum(np.log(stats.norm.pdf(df_smart_up['bytes_up']+epsilon, media_smart_up, np.sqrt(variancia_smart_up))))
-    log_likelihood_smart_down_gaussiana = np.sum(np.log(stats.norm.pdf(df_smart_down['bytes_down']+epsilon, media_smart_down, np.sqrt(variancia_smart_down))))
-    log_likelihood_chrome_up_gaussiana = np.sum(np.log(stats.norm.pdf(df_chrome_up['bytes_up']+epsilon, media_chrome_up, np.sqrt(variancia_chrome_up))))
-    log_likelihood_chrome_down_gaussiana = np.sum(np.log(stats.norm.pdf(df_chrome_down['bytes_down']+epsilon, media_chrome_down, np.sqrt(variancia_chrome_down))))
+    log_likelihood_smart_up_gaussiana = np.sum(np.log(stats.norm.pdf(df_smart_up['bytes_up'], media_smart_up, np.sqrt(variancia_smart_up))))
+    log_likelihood_smart_down_gaussiana = np.sum(np.log(stats.norm.pdf(df_smart_down['bytes_down'], media_smart_down, np.sqrt(variancia_smart_down))))
+    log_likelihood_chrome_up_gaussiana = np.sum(np.log(stats.norm.pdf(df_chrome_up['bytes_up'], media_chrome_up, np.sqrt(variancia_chrome_up))))
+    log_likelihood_chrome_down_gaussiana = np.sum(np.log(stats.norm.pdf(df_chrome_down['bytes_down'], media_chrome_down, np.sqrt(variancia_chrome_down))))
 
     # Calcular a log-likelihood para a distribuição Gamma
-    log_likelihood_smart_up_gamma = np.sum(np.log(stats.gamma.pdf(df_smart_up['bytes_up']+epsilon, a_smart_up, scale=b_smart_up)))
-    log_likelihood_smart_down_gamma = np.sum(np.log(stats.gamma.pdf(df_smart_down['bytes_down']+epsilon, a_smart_down, scale=b_smart_down)))
-    log_likelihood_chrome_up_gamma = np.sum(np.log(stats.gamma.pdf(df_chrome_up['bytes_up']+epsilon, a_chrome_up, scale=b_chrome_up)))
-    log_likelihood_chrome_down_gamma = np.sum(np.log(stats.gamma.pdf(df_chrome_down['bytes_down']+epsilon, a_chrome_down, scale=b_chrome_down)))
+    log_likelihood_smart_up_gamma = np.sum(np.log(stats.gamma.pdf(df_smart_up['bytes_up'], a_smart_up, loc=loc_smart_up, scale=b_smart_up)))
+    log_likelihood_smart_down_gamma = np.sum(np.log(stats.gamma.pdf(df_smart_down['bytes_down'], a_smart_down, loc=loc_smart_down, scale=b_smart_down)))
+    log_likelihood_chrome_up_gamma = np.sum(np.log(stats.gamma.pdf(df_chrome_up['bytes_up'], a_chrome_up, loc=loc_chrome_up, scale=b_chrome_up)))
+    log_likelihood_chrome_down_gamma = np.sum(np.log(stats.gamma.pdf(df_chrome_down['bytes_down'], a_chrome_down, loc=loc_chrome_down, scale=b_chrome_down)))
 
     # Calcular a likelihood para as duas distribuições
     likelihood_smart_up_gaussiana = np.exp(log_likelihood_smart_up_gaussiana)
@@ -152,7 +141,6 @@ def passo_3(df_smart_up, df_smart_down, df_chrome_up, df_chrome_down, salvar = F
     likelihood_smart_down_gamma = np.exp(log_likelihood_smart_down_gamma)
     likelihood_chrome_up_gamma = np.exp(log_likelihood_chrome_up_gamma)
     likelihood_chrome_down_gamma = np.exp(log_likelihood_chrome_down_gamma)
-
 
     # Printar os resultados (parametros e likelihood)
     print('Smart TV - Download')
@@ -186,13 +174,6 @@ def passo_3(df_smart_up, df_smart_down, df_chrome_up, df_chrome_down, salvar = F
     # Salvar os resultados em um arquivo de texto
     if salvar:
         data = {
-            "Smart TV - Download": {
-                "MLE": parametros_smart_down,
-                "Log-likelihood Gaussiana": log_likelihood_smart_down_gaussiana,
-                "Likelihood Gaussiana": likelihood_smart_down_gaussiana,
-                "Log-likelihood Gamma": log_likelihood_smart_down_gamma,
-                "Likelihood Gamma": likelihood_smart_down_gamma
-            },
             "Smart TV - Upload": {
                 "MLE": parametros_smart_up,
                 "Log-likelihood Gaussiana": log_likelihood_smart_up_gaussiana,
@@ -200,12 +181,12 @@ def passo_3(df_smart_up, df_smart_down, df_chrome_up, df_chrome_down, salvar = F
                 "Log-likelihood Gamma": log_likelihood_smart_up_gamma,
                 "Likelihood Gamma": likelihood_smart_up_gamma
             },
-            "Chromecast - Download": {
-                "MLE": parametros_chrome_down,
-                "Log-likelihood Gaussiana": log_likelihood_chrome_down_gaussiana,
-                "Likelihood Gaussiana": likelihood_chrome_down_gaussiana,
-                "Log-likelihood Gamma": log_likelihood_chrome_down_gamma,
-                "Likelihood Gamma": likelihood_chrome_down_gamma
+            "Smart TV - Download": {
+                "MLE": parametros_smart_down,
+                "Log-likelihood Gaussiana": log_likelihood_smart_down_gaussiana,
+                "Likelihood Gaussiana": likelihood_smart_down_gaussiana,
+                "Log-likelihood Gamma": log_likelihood_smart_down_gamma,
+                "Likelihood Gamma": likelihood_smart_down_gamma
             },
             "Chromecast - Upload": {
                 "MLE": parametros_chrome_up,
@@ -213,6 +194,13 @@ def passo_3(df_smart_up, df_smart_down, df_chrome_up, df_chrome_down, salvar = F
                 "Likelihood Gaussiana": likelihood_chrome_up_gaussiana,
                 "Log-likelihood Gamma": log_likelihood_chrome_up_gamma,
                 "Likelihood Gamma": likelihood_chrome_up_gamma
+            },
+            "Chromecast - Download": {
+                "MLE": parametros_chrome_down,
+                "Log-likelihood Gaussiana": log_likelihood_chrome_down_gaussiana,
+                "Likelihood Gaussiana": likelihood_chrome_down_gaussiana,
+                "Log-likelihood Gamma": log_likelihood_chrome_down_gamma,
+                "Likelihood Gamma": likelihood_chrome_down_gamma
             }
         }
 
@@ -255,7 +243,7 @@ def passo_4(df_smart_up, df_smart_down, df_chrome_up, df_chrome_down, file = "es
     sns.histplot(df_smart_up['bytes_up'], bins=k_smart_up, color='blue', kde=kde, stat='density')
     x = np.linspace(df_smart_up['bytes_up'].min(), df_smart_up['bytes_up'].max(), 1000)
     y_gaussiana = stats.norm.pdf(x, parametros_smart_up['media'], np.sqrt(parametros_smart_up['variancia']))
-    y_gamma = stats.gamma.pdf(x, parametros_smart_up['a'], scale=parametros_smart_up['b'])
+    y_gamma = stats.gamma.pdf(x, parametros_smart_up['a'], scale=parametros_smart_up['b'], loc=parametros_smart_up['loc'])
     plt.plot(x, y_gaussiana, color='red', label='Gaussiana')
     plt.plot(x, y_gamma, color='green', label='Gamma')
     plt.title('Smart TV - Upload')
@@ -268,7 +256,7 @@ def passo_4(df_smart_up, df_smart_down, df_chrome_up, df_chrome_down, file = "es
     sns.histplot(df_smart_down['bytes_down'], bins=k_smart_down, color='blue', kde=kde, stat='density')
     x = np.linspace(df_smart_down['bytes_down'].min(), df_smart_down['bytes_down'].max(), 1000)
     y_gaussiana = stats.norm.pdf(x, parametros_smart_down['media'], np.sqrt(parametros_smart_down['variancia']))
-    y_gamma = stats.gamma.pdf(x, parametros_smart_down['a'], scale=parametros_smart_down['b'])
+    y_gamma = stats.gamma.pdf(x, parametros_smart_down['a'], scale=parametros_smart_down['b'], loc=parametros_smart_down['loc'])
     plt.plot(x, y_gaussiana, color='red', label='Gaussiana')
     plt.plot(x, y_gamma, color='green', label='Gamma')
     plt.title('Smart TV - Download')
@@ -281,7 +269,7 @@ def passo_4(df_smart_up, df_smart_down, df_chrome_up, df_chrome_down, file = "es
     sns.histplot(df_chrome_up['bytes_up'], bins=k_chrome_up, color='red', kde=kde, stat='density')
     x = np.linspace(df_chrome_up['bytes_up'].min(), df_chrome_up['bytes_up'].max(), 1000)
     y_gaussiana = stats.norm.pdf(x, parametros_chrome_up['media'], np.sqrt(parametros_chrome_up['variancia']))
-    y_gamma = stats.gamma.pdf(x, parametros_chrome_up['a'], scale=parametros_chrome_up['b'])
+    y_gamma = stats.gamma.pdf(x, parametros_chrome_up['a'], scale=parametros_chrome_up['b'], loc=parametros_chrome_up['loc'])
     plt.plot(x, y_gaussiana, color='blue', label='Gaussiana')
     plt.plot(x, y_gamma, color='green', label='Gamma')
     plt.title('Chromecast - Upload')
@@ -295,7 +283,7 @@ def passo_4(df_smart_up, df_smart_down, df_chrome_up, df_chrome_down, file = "es
     sns.histplot(df_chrome_down['bytes_down'], bins=k_chrome_down, color='red', kde=kde, stat='density')
     x = np.linspace(df_chrome_down['bytes_down'].min(), df_chrome_down['bytes_down'].max(), 1000)
     y_gaussiana = stats.norm.pdf(x, parametros_chrome_down['media'], np.sqrt(parametros_chrome_down['variancia']))
-    y_gamma = stats.gamma.pdf(x, parametros_chrome_down['a'], scale=parametros_chrome_down['b'])
+    y_gamma = stats.gamma.pdf(x, parametros_chrome_down['a'], scale=parametros_chrome_down['b'], loc=parametros_chrome_down['loc'])
     plt.plot(x, y_gaussiana, color='blue', label='Gaussiana')
     plt.plot(x, y_gamma, color='green', label='Gamma')
     plt.title('Chromecast - Download')
@@ -451,20 +439,17 @@ def passo_6(df_smart_up, df_smart_down, df_chrome_up, df_chrome_down, salvar=Fal
         plt.savefig('caracterizando os horários/qq_plot.png')
     plt.show()
 
-
-
-
 if __name__ == '__main__':
     # Salvar os resultados
-    salvar = False
+    salvar = True
 
-    # Carregar os dados
-    df1 = pd.read_csv('dados/smart_preprocessado.csv')
-    df2 = pd.read_csv('dados/chrome_preprocessado.csv')
+    # # Carregar os dados
+    # df1 = pd.read_csv('dados/smart_preprocessado.csv')
+    # df2 = pd.read_csv('dados/chrome_preprocessado.csv')
 
-    # passo 1: criar datasets com a maior taxa de upload e download por dispositivo
-    horarios_maior_media = {'smart_up': 20, 'smart_down': 20, 'chrome_up': 22, 'chrome_down': 23}
-    dataset_1, dataset_2, dataset_3, dataset_4 = passo_1(df1, df2, horarios_maior_media, salvar=salvar)
+    # # passo 1: criar datasets com a maior taxa de upload e download por dispositivo
+    # horarios_maior_media = {'smart_up': 20, 'smart_down': 20, 'chrome_up': 22, 'chrome_down': 23}
+    # dataset_1, dataset_2, dataset_3, dataset_4 = passo_1(df1, df2, horarios_maior_media, salvar=salvar)
 
     # Carregando os 4 datasets
     dataset_1 = pd.read_csv('dados/dataset_1.csv')
@@ -472,8 +457,8 @@ if __name__ == '__main__':
     dataset_3 = pd.read_csv('dados/dataset_3.csv')
     dataset_4 = pd.read_csv('dados/dataset_4.csv')
         
-    # passo 2: histograma dos datasets (bins = 19, 19, 18, 18)
-    passo_2(dataset_1, dataset_2, dataset_3, dataset_4, salvar=salvar)
+    # # passo 2: histograma dos datasets (bins = 19, 19, 18, 18)
+    # passo_2(dataset_1, dataset_2, dataset_3, dataset_4, salvar=salvar)
 
     # passo 3: cálculo do MLE para distribuição Gaussiana e Gamma
     passo_3(dataset_1, dataset_2, dataset_3, dataset_4, salvar=salvar)
@@ -481,9 +466,9 @@ if __name__ == '__main__':
     # passo 4: plotar histograma, pdf gaussiana e pdf gamma na mesma figura
     passo_4(dataset_1, dataset_2, dataset_3, dataset_4, file = "caracterizando os horários/estatisticas_mle.json", salvar = salvar)
 
-    # passo 5: probability plot para cada distribuição usando os parametros do MLE
-    passo_5(dataset_1, dataset_2, dataset_3, dataset_4, file = "caracterizando os horários/estatisticas_mle.json", salvar = salvar)
+    # # passo 5: probability plot para cada distribuição usando os parametros do MLE
+    # passo_5(dataset_1, dataset_2, dataset_3, dataset_4, file = "caracterizando os horários/estatisticas_mle.json", salvar = salvar)
 
-    # # passo 6: Q Q plot comparando os datasets 1 e 3, e os datasets 2 e 4
-    passo_6(dataset_1, dataset_2, dataset_3, dataset_4, salvar=salvar)
+    # # # passo 6: Q Q plot comparando os datasets 1 e 3, e os datasets 2 e 4
+    # passo_6(dataset_1, dataset_2, dataset_3, dataset_4, salvar=salvar)
 
