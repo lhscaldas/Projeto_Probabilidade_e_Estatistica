@@ -102,20 +102,17 @@ def MLE(data):
     if (data < 0).any():
         raise ValueError('Os dados contêm valores negativos. A distribuição Gamma não pode ser usada.')
     
+    # Verificar se data tem valores iguais a zero
+    if (data == 0).any():
+        epsilon = 1e-3
+        print(f'Os dados contêm valores iguais a zero. Adicionando um epsilon = {epsilon} para evitar erro de log(0).\n')
+        data += epsilon
+    
     # Estimar parâmetros da gamma
-    epsilon = 1e-6
-    a, loc, scale = gamma.fit(data+epsilon, floc=0)
-    b = scale  # Em scipy, scale é equivalente a 'b'
-
-    # Teste de Kolmogorov-Smirnov para Gaussiana
-    ks_stat, p_value = kstest(data, 'norm', args=(media, np.sqrt(variancia)))
-    print(f"KS-Test Gaussiana: Estatística={ks_stat}, p-valor={p_value}")
-
-    # Teste de Kolmogorov-Smirnov para Gamma
-    ks_stat, p_value = kstest(data, 'gamma', args=(a, 0, b))
-    print(f"KS-Test Gamma: Estatística={ks_stat}, p-valor={p_value}")
+    a, loc, b = gamma.fit(data, floc=0)
     
     return media, variancia, a, b
+
 
 # Cálculo do MLE para distribuição Gaussiana e Gamma
 def passo_3(df_smart_up, df_smart_down, df_chrome_up, df_chrome_down, salvar = False):

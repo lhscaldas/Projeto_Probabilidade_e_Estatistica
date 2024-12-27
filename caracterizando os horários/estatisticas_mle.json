@@ -3,48 +3,48 @@
         "MLE": {
             "media": 3.3960945564366285,
             "variancia": 6.201343416537702,
-            "a": 0.2356278954221435,
-            "b": 14.4129605297891
+            "a": 0.40778147671690185,
+            "b": 8.330674026164818
         },
-        "Log-likelihood Gaussiana": -495657.603074489,
+        "Log-likelihood Gaussiana": -495657.6202165846,
         "Likelihood Gaussiana": 0.0,
-        "Log-likelihood Gamma": 135820.8489449049,
-        "Likelihood Gamma": Infinity
+        "Log-likelihood Gamma": -387106.17138631194,
+        "Likelihood Gamma": 0.0
     },
     "Smart TV - Upload": {
         "MLE": {
             "media": 3.124258107506722,
             "variancia": 3.1687396722858607,
-            "a": 0.2801668912453381,
-            "b": 11.151421545991504
+            "a": 0.49365570588394597,
+            "b": 6.330845709380785
         },
-        "Log-likelihood Gaussiana": -424281.6936679817,
+        "Log-likelihood Gaussiana": -424281.7272157111,
         "Likelihood Gaussiana": 0.0,
-        "Log-likelihood Gamma": -133.0404337190812,
-        "Likelihood Gamma": 1.6644615447359122e-58
+        "Log-likelihood Gamma": -406883.5248558981,
+        "Likelihood Gamma": 0.0
     },
     "Chromecast - Download": {
         "MLE": {
             "media": 4.052698112658847,
             "variancia": 2.15935911604656,
-            "a": 3.4443316009077507,
-            "b": 1.1766286125269594
+            "a": 4.7260886157383935,
+            "b": 0.8577279103822955
         },
-        "Log-likelihood Gaussiana": -129602.60305871296,
+        "Log-likelihood Gaussiana": -129602.61969513391,
         "Likelihood Gaussiana": 0.0,
-        "Log-likelihood Gamma": -160563.05664464505,
+        "Log-likelihood Gamma": -141373.21069459908,
         "Likelihood Gamma": 0.0
     },
     "Chromecast - Upload": {
         "MLE": {
             "media": 3.521546370674634,
             "variancia": 0.5957117566059503,
-            "a": 5.513267433014294,
-            "b": 0.6387405315379889
+            "a": 8.765368796179578,
+            "b": 0.4018708684807364
         },
-        "Log-likelihood Gaussiana": -89011.42613382792,
+        "Log-likelihood Gaussiana": -89011.49054250756,
         "Likelihood Gaussiana": 0.0,
-        "Log-likelihood Gamma": -151430.69429789032,
+        "Log-likelihood Gamma": -119219.41176058841,
         "Likelihood Gamma": 0.0
     }
 }
