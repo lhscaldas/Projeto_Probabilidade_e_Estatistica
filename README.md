@@ -31,6 +31,6 @@ A correlação entre upload e download é investigada para os horários de maior
 ### [Comparação dos dados gerados pelos dispositivos Smart-TV e Chromecast](códigos/G_test.py)
 Utilizando o teste estatístico G (G-test), compara-se a similaridade entre as distribuições de upload e download dos dois dispositivos nos horários de maior tráfego. Os histogramas devem ser padronizados para permitir a comparação.
 
-### [Relatório](relatório/relatorio.pdf)
+### [Relatório](relatório/Luiz_Caldas.pdf)
 O relatório final deve compilar todos os resultados, detalhar as metodologias utilizadas e comentar sobre a aplicabilidade das conclusões para auxiliar o provedor de Internet a compreender melhor o comportamento de sua rede. O código-fonte deve ser disponibilizado por meio de um link no relatório.
 
