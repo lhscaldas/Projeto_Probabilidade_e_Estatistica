@@ -439,33 +439,33 @@ def passo_6(df_smart_up, df_smart_down, df_chrome_up, df_chrome_down, salvar=Fal
     smart_down_sorted = np.sort(df_smart_down['bytes_down'])
     chrome_down_sorted = np.sort(df_chrome_down['bytes_down'])
 
-    # Quantis para os conjuntos menores
-    quantis_smart_up = np.linspace(0, 1, len(smart_up_sorted))
+    # Quantis para os conjuntos menores (Chromecast)
     quantis_chrome_up = np.linspace(0, 1, len(chrome_up_sorted))
-    quantis_smart_down = np.linspace(0, 1, len(smart_down_sorted))
     quantis_chrome_down = np.linspace(0, 1, len(chrome_down_sorted))
 
-    # Interpolação linear para alinhar os conjuntos
-    chrome_up_interp = np.interp(quantis_smart_up, quantis_chrome_up, chrome_up_sorted)
-    chrome_down_interp = np.interp(quantis_smart_down, quantis_chrome_down, chrome_down_sorted)
+    # Interpolação linear para alinhar os conjuntos maiores (Smart TV)
+    smart_up_interp = np.interp(quantis_chrome_up, np.linspace(0, 1, len(smart_up_sorted)), smart_up_sorted)
+    smart_down_interp = np.interp(quantis_chrome_down, np.linspace(0, 1, len(smart_down_sorted)), smart_down_sorted)
 
     # Plot do QQ Plot para upload
     plt.figure(figsize=(10, 5))
     plt.subplot(1, 2, 1)
-    plt.scatter(smart_up_sorted, chrome_up_interp, alpha=0.6)
-    plt.plot([smart_up_sorted.min(), smart_up_sorted.max()], [smart_up_sorted.min(), smart_up_sorted.max()], 'r--')
+    plt.scatter(chrome_up_sorted, smart_up_interp, alpha=0.6)  # Chromecast nos quantis do eixo x, Smart TV interpolada no y
+    plt.plot([chrome_up_sorted.min(), chrome_up_sorted.max()], 
+            [chrome_up_sorted.min(), chrome_up_sorted.max()], 'r--')  # Linha de referência
     plt.title("QQ Plot: Smart TV Upload vs. Chromecast Upload")
-    plt.xlabel("Smart TV Upload Quantiles")
-    plt.ylabel("Chromecast Upload Quantiles")
+    plt.xlabel("Quantis Chromecast - Upload")
+    plt.ylabel("Quantis Smart TV - Upload")
     plt.grid(True)
 
     # Plot do QQ Plot para download
     plt.subplot(1, 2, 2)
-    plt.scatter(smart_down_sorted, chrome_down_interp, alpha=0.6)
-    plt.plot([smart_down_sorted.min(), smart_down_sorted.max()], [smart_down_sorted.min(), smart_down_sorted.max()], 'r--')
+    plt.scatter(chrome_down_sorted, smart_down_interp, alpha=0.6)  # Chromecast nos quantis do eixo x, Smart TV interpolada no y
+    plt.plot([chrome_down_sorted.min(), chrome_down_sorted.max()], 
+            [chrome_down_sorted.min(), chrome_down_sorted.max()], 'r--')  # Linha de referência
     plt.title("QQ Plot: Smart TV Download vs. Chromecast Download")
-    plt.xlabel("Smart TV Download Quantiles")
-    plt.ylabel("Chromecast Download Quantiles")
+    plt.xlabel("Quantis Chromecast - Download")
+    plt.ylabel("Quantis Smart TV - Download")
     plt.grid(True)
 
     plt.tight_layout()
@@ -500,9 +500,9 @@ if __name__ == '__main__':
     # passo 4: plotar histograma, pdf gaussiana e pdf gamma na mesma figura
     # passo_4(dataset_1, dataset_2, dataset_3, dataset_4, file = "caracterizando os horários/estatisticas_mle.json", salvar = salvar)
 
-    # passo 5: probability plot para cada distribuição usando os parametros do MLE
-    passo_5(dataset_1, dataset_2, dataset_3, dataset_4, file = "caracterizando os horários/estatisticas_mle.json", salvar = salvar)
+    # # passo 5: probability plot para cada distribuição usando os parametros do MLE
+    # passo_5(dataset_1, dataset_2, dataset_3, dataset_4, file = "caracterizando os horários/estatisticas_mle.json", salvar = salvar)
 
-    # # # passo 6: Q Q plot comparando os datasets 1 e 3, e os datasets 2 e 4
-    # passo_6(dataset_1, dataset_2, dataset_3, dataset_4, salvar=salvar)
+    # passo 6: Q Q plot comparando os datasets 1 e 3, e os datasets 2 e 4
+    passo_6(dataset_1, dataset_2, dataset_3, dataset_4, salvar=salvar)
 

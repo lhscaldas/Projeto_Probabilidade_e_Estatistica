@@ -176,10 +176,28 @@ A avaliação dos \textit{probability plots} revela que a distribuição Gaussia
 A distribuição Gamma, apesar de ser mais flexível, também apresentou resultados insatisfatórios. Assim como a Gaussiana, os \textit{probability plots} mostram que a Gamma se distancia excessivamente da linha reta nos valores extremos e, embora se aproxime dela nos valores centrais, essa aproximação é marcada por oscilações significativas. Mesmo com o uso do parâmetro de deslocamento (\(loc\)) para lidar com os valores nulos, a distribuição Gamma não foi capaz de capturar a alta densidade de valores próximos de zero nem os padrões de dispersão observados. Dessa forma, ambas as distribuições falham em modelar adequadamente os dados analisados.
 adequada que a Gaussiana para os dados analisados.
 
-
 \subsection{Passo 6: QQ Plots}
 
-\textit{QQ Plots} foram produzidos para comparar os datasets de upload e download entre os dispositivos (Smart TV e Chromecast). A interpolação linear foi utilizada para alinhar os quantis dos datasets de tamanhos diferentes. Esses gráficos permitem a análise das similaridades entre os padrões de tráfego dos dispositivos.
+Foram gerados \textit{QQ Plots} para comparar os dados de upload e download entre os dispositivos Smart TV e Chromecast, considerando os horários de maior tráfego identificados nos passos anteriores. Os conjuntos de dados da Smart TV (\textit{datasets} 1 e 3) são os maiores, enquanto os do Chromecast (\textit{datasets} 2 e 4) são os menores. A interpolação foi implementada utilizando a função \texttt{numpy.interp}, que aplica a seguinte fórmula básica de interpolação linear:
+\[
+y = y_1 + \frac{(x - x_1)(y_2 - y_1)}{(x_2 - x_1)},
+\]
+onde \(x\) representa os quantis do menor conjunto de dados (Chromecast), \(x_1\) e \(x_2\) são quantis do maior conjunto (Smart TV) que cercam \(x\), e \(y_1\) e \(y_2\) são os valores correspondentes no maior conjunto. Esse procedimento garante que os quantis dos dois conjuntos sejam comparados de forma consistente, ajustando o conjunto maior (Smart TV) para alinhar-se ao conjunto menor (Chromecast).
+
+Os \textit{QQ Plots} comparando as taxas de upload dos dispositivos Smart TV (\textit{dataset} 1) e Chromecast (\textit{dataset} 3), e as taxas de download dos dispositivos Smart TV (\textit{dataset} 2) e Chromecast (\textit{dataset} 4) são apresentados na Figura~\ref{fig:qq_plot}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{../caracterizando os horários/qq_plot.png}
+    \caption{QQ Plots para os horários de maior tráfego dos dispositivos Smart TV e Chromecast.}
+    \label{fig:qq_plot}
+\end{figure}
+
+Os \textit{QQ Plots} indicam diferenças marcantes entre os padrões de tráfego da Smart TV e do Chromecast para upload e download. Na região inicial, observa-se uma linha horizontal paralela ao eixo dos quantis do Chromecast, indicando que, enquanto a Smart TV possui muitos valores nulos (\(x = 0\)), Chromecast apresenta valores positivos não nulos. Esse comportamento reflete uma discrepância significativa na forma como os dois dispositivos tratam os valores iniciais.
+
+Na região central dos gráficos, os pontos continuam desalinhados em relação à linha de referência (\(y = x\)), evidenciando que as distribuições dos dois dispositivos possuem padrões distintos. A variabilidade na Smart TV é mais ampla, o que contribui para a diferença estrutural entre os conjuntos. Esse desalinhamento é consistente tanto para upload quanto para download.
+
+Nas caudas superiores, os pontos mostram que os valores da Smart TV são significativamente maiores do que os do Chromecast. Isso sugere que a Smart TV possui uma maior proporção de valores extremos, indicando uma maior variabilidade e dispersão dos dados. Essa diferença é mais acentuada para o download, onde a Smart TV apresenta valores mais altos do que o Chromecast.
 
 \subsection{Análise dos Resultados}
 
