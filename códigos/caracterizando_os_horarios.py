@@ -375,7 +375,7 @@ def passo_5(df_smart_up, df_smart_down, df_chrome_up, df_chrome_down, file = "es
     plt.title('Chromecast - Download')
     plt.tight_layout()
     if salvar:
-        plt.savefig('caracterizando os horários/probplot.png')
+        plt.savefig('caracterizando os horários/probplot_gaussiana.png')
     plt.show()
 
     # plot da distribuição gamma
@@ -460,14 +460,14 @@ if __name__ == '__main__':
     # # passo 2: histograma dos datasets (bins = 19, 19, 18, 18)
     # passo_2(dataset_1, dataset_2, dataset_3, dataset_4, salvar=salvar)
 
-    # passo 3: cálculo do MLE para distribuição Gaussiana e Gamma
-    passo_3(dataset_1, dataset_2, dataset_3, dataset_4, salvar=salvar)
+    # # passo 3: cálculo do MLE para distribuição Gaussiana e Gamma
+    # passo_3(dataset_1, dataset_2, dataset_3, dataset_4, salvar=salvar)
 
-    # passo 4: plotar histograma, pdf gaussiana e pdf gamma na mesma figura
-    passo_4(dataset_1, dataset_2, dataset_3, dataset_4, file = "caracterizando os horários/estatisticas_mle.json", salvar = salvar)
+    # # passo 4: plotar histograma, pdf gaussiana e pdf gamma na mesma figura
+    # passo_4(dataset_1, dataset_2, dataset_3, dataset_4, file = "caracterizando os horários/estatisticas_mle.json", salvar = salvar)
 
-    # # passo 5: probability plot para cada distribuição usando os parametros do MLE
-    # passo_5(dataset_1, dataset_2, dataset_3, dataset_4, file = "caracterizando os horários/estatisticas_mle.json", salvar = salvar)
+    # passo 5: probability plot para cada distribuição usando os parametros do MLE
+    passo_5(dataset_1, dataset_2, dataset_3, dataset_4, file = "caracterizando os horários/estatisticas_mle.json", salvar = salvar)
 
     # # # passo 6: Q Q plot comparando os datasets 1 e 3, e os datasets 2 e 4
     # passo_6(dataset_1, dataset_2, dataset_3, dataset_4, salvar=salvar)
