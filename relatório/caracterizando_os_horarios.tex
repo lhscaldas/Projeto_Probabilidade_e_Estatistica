@@ -72,7 +72,8 @@ No caso da distribuição Gamma, a estimação dos parâmetros \(\alpha\) (forma
     \hat{\beta} = \frac{\bar{x}}{\hat{\alpha}}
 \end{equation}
 
-Para realizar essas estimativas, foi utilizado o método `gamma.fit` da biblioteca `scipy.stats` do Python. Este método aplica o MLE de forma eficiente, empregando algoritmos de otimização numérica para determinar os parâmetros que melhor se ajustam aos dados observados. A função `gamma.fit` retorna estimativas para os parâmetros de forma (\(\alpha\)) e escala (\(\beta\)) da distribuição Gamma, facilitando a modelagem estatística dos dados.
+Para realizar essas estimativas, foi utilizado o método \texttt{gamma.fit} da biblioteca \texttt{scipy.stats} do Python. Este método aplica o MLE de forma eficiente, empregando algoritmos de otimização numérica para determinar os parâmetros que melhor se ajustam aos dados observados. Além dos parâmetros de forma (\(\alpha\)) e escala (\(\beta\)), o método também estima o parâmetro de localização (\(loc\)), que desloca a distribuição Gamma ao longo do eixo \(x\). Esse deslocamento é essencial quando os dados incluem valores iguais a zero (o que é o caso, como mostrado na Seção~\ref{sec:eda}), já que a função de densidade de probabilidade (PDF) da distribuição Gamma é indefinida para \(x = 0\) quando \(loc = 0\). Com \(loc > 0\), a PDF é modificada para começar em \(x = loc\), tornando possível ajustar a distribuição mesmo em presença de valores nulos ou muito baixos. A utilização desse parâmetro garante que a modelagem estatística permaneça válida e consistente com as características dos dados.
+
 
 Os resultados das estimativas de parâmetros via MLE para as distribuições Gaussiana e Gamma são apresentados na Tabela~\ref{tab:resultados_mle}.
 
@@ -80,45 +81,48 @@ Os resultados das estimativas de parâmetros via MLE para as distribuições Gau
     \centering
     \caption{Resultados das estimativas de parâmetros via MLE}
     \label{tab:resultados_mle}
-    \begin{tabular}{|c|c|c|c|c|}
+    \begin{tabular}{|c|c|c|c|c|c|}
         \hline
-        \textbf{Dataset} & \textbf{$\hat{\mu}$} & \textbf{$\hat{\sigma}^2$} & \textbf{$\hat{\alpha}$} & \textbf{$\hat{\beta}$} \\ 
+        \textbf{Dataset} & $\boldsymbol{\hat{\mu}}$ & $\boldsymbol{\hat{\sigma}^2}$ & $\boldsymbol{\hat{\alpha}}$ & $\boldsymbol{\hat{\beta}}$ & $\boldsymbol{\textit{loc}}$ \\ 
         \hline
-        Dataset 1 (Smart TV - Upload) & 3.1243 & 3.1687 & 0.4937 & 6.3308 \\ 
+        Dataset 1 (Smart TV - Upload) & 3.2243 & 3.1687 & 214.6171 & 0.1245 & -23.4982 \\ 
         \hline
-        Dataset 2 (Smart TV - Download) & 3.3961 & 6.2013 & 0.4078 & 8.3307 \\ 
+        Dataset 2 (Smart TV - Download) & 3.4961 & 6.2013 & 883.8791 & 0.0838 & -70.5760 \\ 
         \hline
-        Dataset 3 (Chromecast - Upload) & 3.5215 & 0.5957 & 8.7654 & 0.4019 \\ 
+        Dataset 3 (Chromecast - Upload) & 3.6215 & 0.5957 & 3078.6394 & 0.0139 & -39.2307 \\ 
         \hline
-        Dataset 4 (Chromecast - Download) & 4.0527 & 2.1594 & 4.7261 & 0.8577 \\ 
+        Dataset 4 (Chromecast - Download) & 4.1527 & 2.1594 & 27.1301 & 0.2832 & -3.5314 \\ 
         \hline
-    \end{tabular}
-\end{table}
+        \end{tabular}
+    \end{table}
 
-Além disso, as \textit{log-likelihoods} e \textit{likelihoods} para as distribuições Gaussiana e Gamma são apresentadas na Tabela~\ref{tab:likelihoods}. As \textit{log-likelihoods} foram calculadas primeiro, para evitar erros de \textit{underflow} ao calcular as \textit{likelihoods}, substituindo a multiplicação de valores muito pequenos pela soma de seus logaritmos naturais.
-\begin{table}[H]
-    \centering
-    \caption{Likelihoods ($L$) e Log-likelihoods ($log[L]$) para os Datasets}
-    \label{tab:likelihoods}
-    \begin{tabular}{|c|c|c|c|c|}
+    Além disso, as \textit{log-likelihoods} e \textit{likelihoods} para as distribuições Gaussiana e Gamma são apresentadas na Tabela~\ref{tab:likelihoods}. As \textit{log-likelihoods} foram calculadas primeiro, para evitar erros de \textit{underflow} ao calcular as \textit{likelihoods}, substituindo a multiplicação de valores muito pequenos pela soma de seus logaritmos naturais.
+    \begin{table}[H]
+        \centering
+        \caption{Likelihoods ($L$) e Log-likelihoods ($\log[L]$) para os Datasets}
+        \label{tab:likelihoods}
+        \begin{adjustbox}{center}
+        \begin{tabular}{|c|c|c|c|c|}
         \hline
-        \textbf{Dataset} & \textbf{$log[L]$ Gaussiana} & \textbf{$L$ Gaussiana} & \textbf{$log[L]$ Gamma} & \textbf{$L$ Gamma} \\ 
+        \textbf{Dataset} & $\boldsymbol{\log[L]}$ \textbf{Gaussiana} & $\boldsymbol{L}$ \textbf{Gaussiana} & $\boldsymbol{\log[L]}$ \textbf{Gamma} & $\boldsymbol{L}$ \textbf{Gamma} \\ 
         \hline
-        Dataset 1 (Smart TV - Upload) & -424282 & 0.0 & -406884 & 0.0 \\ 
+        Dataset 1 (Smart TV - Upload) & -424282 & 0 & -427222 & 0 \\ 
         \hline
-        Dataset 2 (Smart TV - Download) & -495658 & 0.0 & -387106 & 0.0 \\ 
+        Dataset 2 (Smart TV - Download) & -495658 & 0 & -495518 & 0 \\ 
         \hline
-        Dataset 3 (Chromecast - Upload) & -89011 & 0.0 & -119219 & 0.0 \\ 
+        Dataset 3 (Chromecast - Upload) & -89011 & 0 & -89015 & 0 \\ 
         \hline
-        Dataset 4 (Chromecast - Download) & -129603 & 0.0 & -141373 & 0.0 \\ 
+        Dataset 4 (Chromecast - Download) & -129603 & 0 & -128993 & 0 \\ 
         \hline
-    \end{tabular}
-\end{table}
+        \end{tabular}
+        \end{adjustbox}
+    \end{table}
 
+Os valores nulos das \textit{likelihoods} indicam que as distribuições propostas (Gaussiana e Gamma) não são adequadas para modelar os dados observados. Isso será visualizado melhor na próxima seção, onde os histogramas dos dados e as funções de densidade parametrizadas serão comparados.
 
 \subsection{Passo 4: Gráficos de Densidade}
 
-Gráficos contendo o histograma dos dados e as funções de densidade Gaussiana e Gamma, parametrizadas pelos valores obtidos no Passo 3, foram gerados e estão disponíveis na Figura~\ref{fig:histogramas_pdf}. Esses gráficos possibilitam uma comparação visual da aderência de cada distribuição aos dados reais.
+Gráficos contendo o histograma dos dados e as funções de densidade Gaussiana e Gamma, parametrizadas pelos valores obtidos no Passo 3, foram gerados utilizando o método \texttt{pdf} das classes \texttt{scipy.stats.norm} e \texttt{scipy.stats.gamma} do Python. Esses gráficos permitem uma comparação visual da aderência de cada distribuição aos dados reais e estão disponíveis na Figura~\ref{fig:histogramas_pdf}.
 
 \begin{figure}[H]
     \centering
@@ -127,9 +131,9 @@ Gráficos contendo o histograma dos dados e as funções de densidade Gaussiana 
     \label{fig:histogramas_pdf}
 \end{figure}
 
-Observando a figura, é possível notar que nenhuma das distribuições propostas (Gaussiana e Gamma) se ajusta bem aos dados observados. A distribuição Gamma inclusive explode para valores muito baixos dos dados referentes a Smart TV. 
+Observando a figura, é possível notar que nenhuma das distribuições propostas (Gaussiana e Gamma) se ajusta bem aos dados observados. Os histogramas sugerem que os dados não seguem uma distribuição normal e nem gamma, o que pode ser um dos motivos para a má aderência das distribuições propostas. A tabela de \textit{likelihoods} também indica que as distribuições propostas não são adequadas para modelar os dados, já que as \textit{log-likelihoods} são muito negativas, acarretando em \textit{likelihoods} nulas.
 
-Voltando na figura \ref{fig:histogramas_horarios}, é possível observar que os dados não seguem uma distribuição normal e nem gamma, o que pode ser um dos motivos para a má aderência das distribuições propostas. Uma sugestão seria utilizar uma mistura de distribuições para representar os dados, da seguinte forma:
+Uma sugestão seria utilizar uma mistura de distribuições para representar os dados, da seguinte forma:
 
 \begin{itemize}
     \item \textbf{Dataset 1 (Smart TV - Upload):} Mistura de uma Gaussiana e uma Gamma.
@@ -138,11 +142,40 @@ Voltando na figura \ref{fig:histogramas_horarios}, é possível observar que os 
     \item \textbf{Dataset 4 (Chromecast - Download):} Mistura de uma Gaussiana e duas Gammas.
 \end{itemize}
 
+Outra abordagem seria estimar a distribuição empírica dos dados, sem a necessidade de assumir uma distribuição paramétrica específica. Isso poderia ser feito utilizando métodos não paramétricos, como o estimador de densidade de Kernel (em inglês, \textit{Kernel Density Estimator} - KDE), que não requer a especificação de uma forma funcional para a distribuição dos dados. Utilizando o parametro KDE da biblioteca \texttt{seaborn} do Python, é possível estimar a distribuição empírica dos dados, como mostrado na Figura~\ref{fig:histogramas_pdf_kde}.
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{../caracterizando os horários/histogramas_pdf_kde.png}
+    \caption{Histogramas dos dados e estimativas de densidade empírica utilizando KDE.}
+    \label{fig:histogramas_pdf_kde}
+\end{figure}
 
 \subsection{Passo 5: Probability Plots}
 
-\textit{Probability Plots} foram criados para comparar os dados reais com as distribuições parametrizadas (Gaussiana e Gamma). No total, 8 gráficos foram gerados, permitindo avaliar a adequação das distribuições propostas aos dados.
+\textit{Probability Plots} foram criados para comparar os dados reais com as distribuições parametrizadas (Gaussiana e Gamma), utilizando o método \texttt{probplot} da biblioteca \texttt{scipy.stats} do Python.
+
+No total, 8 gráficos foram gerados, permitindo avaliar a adequação das distribuições propostas aos dados. Essas gráficos podem ser observados nas Figuras~\ref{fig:probplot_gaussiana} e~\ref{fig:probplot_gamma}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{../caracterizando os horários/probplot_gaussiana.png}
+    \caption{Probability Plots para as distribuições Gaussiana.}
+    \label{fig:probplot_gaussiana}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{../caracterizando os horários/probplot_gamma.png}
+    \caption{Probability Plots para as distribuições Gamma.}
+    \label{fig:probplot_gamma}
+\end{figure}
+
+A avaliação dos \textit{probability plots} revela que a distribuição Gaussiana apresenta um ajuste insatisfatório para todos os datasets analisados. Em todos os casos, observa-se que os pontos se distanciam consideravelmente da linha reta nas regiões extremas, com aproximação parcial na região central. No entanto, mesmo nessa aproximação, os pontos oscilam de forma significativa em torno da linha, indicando inconsistências no ajuste. A Gaussiana não consegue capturar a assimetria dos dados nem modelar adequadamente a alta concentração de valores baixos ou iguais a zero, como observado nas taxas de upload e download da Smart TV e do Chromecast.
+
+A distribuição Gamma, apesar de ser mais flexível, também apresentou resultados insatisfatórios. Assim como a Gaussiana, os \textit{probability plots} mostram que a Gamma se distancia excessivamente da linha reta nos valores extremos e, embora se aproxime dela nos valores centrais, essa aproximação é marcada por oscilações significativas. Mesmo com o uso do parâmetro de deslocamento (\(loc\)) para lidar com os valores nulos, a distribuição Gamma não foi capaz de capturar a alta densidade de valores próximos de zero nem os padrões de dispersão observados. Dessa forma, ambas as distribuições falham em modelar adequadamente os dados analisados.
+adequada que a Gaussiana para os dados analisados.
+
 
 \subsection{Passo 6: QQ Plots}
 

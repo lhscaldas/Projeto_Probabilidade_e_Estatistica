@@ -94,6 +94,10 @@ def passo_2(df_smart_up, df_smart_down, df_chrome_up, df_chrome_down, salvar = F
 
 # Cálculo do MLE para distribuição Gaussiana e Gamma
 def MLE(data):
+    # Remover valores nulos
+    epsilon = 1e-1
+    data += epsilon
+
     # Estimativa da gaussiana
     media = np.mean(data)
     variancia = np.var(data)
@@ -233,19 +237,22 @@ def passo_4(df_smart_up, df_smart_down, df_chrome_up, df_chrome_down, file = "es
     print('Número de bins Chromecast Download:', k_chrome_down)
     
     # Configurações de exibição
-    kde = False
+    kde = True
 
     # Criação dos subplots
     plt.figure(figsize=(12, 6))
 
     # Smart TV - Upload
     plt.subplot(2, 2, 1)
-    sns.histplot(df_smart_up['bytes_up'], bins=k_smart_up, color='blue', kde=kde, stat='density')
-    x = np.linspace(df_smart_up['bytes_up'].min(), df_smart_up['bytes_up'].max(), 1000)
-    y_gaussiana = stats.norm.pdf(x, parametros_smart_up['media'], np.sqrt(parametros_smart_up['variancia']))
-    y_gamma = stats.gamma.pdf(x, parametros_smart_up['a'], scale=parametros_smart_up['b'], loc=parametros_smart_up['loc'])
-    plt.plot(x, y_gaussiana, color='red', label='Gaussiana')
-    plt.plot(x, y_gamma, color='green', label='Gamma')
+    sns.histplot(df_smart_up['bytes_up'], bins=k_smart_up, color='blue', stat='density')
+    if kde:
+        sns.kdeplot(df_smart_up['bytes_up'], color='blue', linestyle='-', label='KDE')
+    else:
+        x = np.linspace(df_smart_up['bytes_up'].min(), df_smart_up['bytes_up'].max(), 1000)
+        y_gaussiana = stats.norm.pdf(x, parametros_smart_up['media'], np.sqrt(parametros_smart_up['variancia']))
+        y_gamma = stats.gamma.pdf(x, parametros_smart_up['a'], scale=parametros_smart_up['b'], loc=parametros_smart_up['loc'])
+        plt.plot(x, y_gaussiana, color='red', label='Gaussiana')
+        plt.plot(x, y_gamma, color='green', label='Gamma')
     plt.title('Smart TV - Upload')
     plt.ylabel('Densidade')
     plt.xlabel('bps (log10)')
@@ -253,12 +260,15 @@ def passo_4(df_smart_up, df_smart_down, df_chrome_up, df_chrome_down, file = "es
 
     # Smart TV - Download
     plt.subplot(2, 2, 2)
-    sns.histplot(df_smart_down['bytes_down'], bins=k_smart_down, color='blue', kde=kde, stat='density')
-    x = np.linspace(df_smart_down['bytes_down'].min(), df_smart_down['bytes_down'].max(), 1000)
-    y_gaussiana = stats.norm.pdf(x, parametros_smart_down['media'], np.sqrt(parametros_smart_down['variancia']))
-    y_gamma = stats.gamma.pdf(x, parametros_smart_down['a'], scale=parametros_smart_down['b'], loc=parametros_smart_down['loc'])
-    plt.plot(x, y_gaussiana, color='red', label='Gaussiana')
-    plt.plot(x, y_gamma, color='green', label='Gamma')
+    sns.histplot(df_smart_down['bytes_down'], bins=k_smart_down, color='blue', stat='density')
+    if kde:
+        sns.kdeplot(df_smart_down['bytes_down'], color='blue', linestyle='-', label='KDE')
+    else:
+        x = np.linspace(df_smart_down['bytes_down'].min(), df_smart_down['bytes_down'].max(), 1000)
+        y_gaussiana = stats.norm.pdf(x, parametros_smart_down['media'], np.sqrt(parametros_smart_down['variancia']))
+        y_gamma = stats.gamma.pdf(x, parametros_smart_down['a'], scale=parametros_smart_down['b'], loc=parametros_smart_down['loc'])
+        plt.plot(x, y_gaussiana, color='red', label='Gaussiana')
+        plt.plot(x, y_gamma, color='green', label='Gamma')
     plt.title('Smart TV - Download')
     plt.ylabel('Densidade')
     plt.xlabel('bps (log10)')
@@ -266,12 +276,15 @@ def passo_4(df_smart_up, df_smart_down, df_chrome_up, df_chrome_down, file = "es
 
     # Chromecast - Upload
     plt.subplot(2, 2, 3)
-    sns.histplot(df_chrome_up['bytes_up'], bins=k_chrome_up, color='red', kde=kde, stat='density')
-    x = np.linspace(df_chrome_up['bytes_up'].min(), df_chrome_up['bytes_up'].max(), 1000)
-    y_gaussiana = stats.norm.pdf(x, parametros_chrome_up['media'], np.sqrt(parametros_chrome_up['variancia']))
-    y_gamma = stats.gamma.pdf(x, parametros_chrome_up['a'], scale=parametros_chrome_up['b'], loc=parametros_chrome_up['loc'])
-    plt.plot(x, y_gaussiana, color='blue', label='Gaussiana')
-    plt.plot(x, y_gamma, color='green', label='Gamma')
+    sns.histplot(df_chrome_up['bytes_up'], bins=k_chrome_up, color='red', stat='density')
+    if kde:
+        sns.kdeplot(df_chrome_up['bytes_up'], color='red', linestyle='-', label='KDE')
+    else:
+        x = np.linspace(df_chrome_up['bytes_up'].min(), df_chrome_up['bytes_up'].max(), 1000)
+        y_gaussiana = stats.norm.pdf(x, parametros_chrome_up['media'], np.sqrt(parametros_chrome_up['variancia']))
+        y_gamma = stats.gamma.pdf(x, parametros_chrome_up['a'], scale=parametros_chrome_up['b'], loc=parametros_chrome_up['loc'])
+        plt.plot(x, y_gaussiana, color='blue', label='Gaussiana')
+        plt.plot(x, y_gamma, color='green', label='Gamma')
     plt.title('Chromecast - Upload')
     plt.ylabel('Densidade')
     plt.xlabel('bps (log10)')
@@ -280,12 +293,15 @@ def passo_4(df_smart_up, df_smart_down, df_chrome_up, df_chrome_down, file = "es
     
     # Chromecast - Download
     plt.subplot(2, 2, 4)
-    sns.histplot(df_chrome_down['bytes_down'], bins=k_chrome_down, color='red', kde=kde, stat='density')
-    x = np.linspace(df_chrome_down['bytes_down'].min(), df_chrome_down['bytes_down'].max(), 1000)
-    y_gaussiana = stats.norm.pdf(x, parametros_chrome_down['media'], np.sqrt(parametros_chrome_down['variancia']))
-    y_gamma = stats.gamma.pdf(x, parametros_chrome_down['a'], scale=parametros_chrome_down['b'], loc=parametros_chrome_down['loc'])
-    plt.plot(x, y_gaussiana, color='blue', label='Gaussiana')
-    plt.plot(x, y_gamma, color='green', label='Gamma')
+    sns.histplot(df_chrome_down['bytes_down'], bins=k_chrome_down, color='red', stat='density')
+    if kde:
+        sns.kdeplot(df_chrome_down['bytes_down'], color='red', linestyle='-', label='KDE')
+    else:
+        x = np.linspace(df_chrome_down['bytes_down'].min(), df_chrome_down['bytes_down'].max(), 1000)
+        y_gaussiana = stats.norm.pdf(x, parametros_chrome_down['media'], np.sqrt(parametros_chrome_down['variancia']))
+        y_gamma = stats.gamma.pdf(x, parametros_chrome_down['a'], scale=parametros_chrome_down['b'], loc=parametros_chrome_down['loc'])
+        plt.plot(x, y_gaussiana, color='blue', label='Gaussiana')
+        plt.plot(x, y_gamma, color='green', label='Gamma')
     plt.title('Chromecast - Download')
     plt.ylabel('Densidade')
     plt.xlabel('bps (log10)')
@@ -295,7 +311,10 @@ def passo_4(df_smart_up, df_smart_down, df_chrome_up, df_chrome_down, file = "es
     # Ajustar layout e exibir o gráfico
     plt.tight_layout()
     if salvar:
-        plt.savefig('caracterizando os horários/histogramas_pdf.png')
+        if kde:
+            plt.savefig('caracterizando os horários/histogramas_pdf_kde.png')
+        else:
+            plt.savefig('caracterizando os horários/histogramas_pdf.png')       
     plt.show()
 
 # probability plot comparando o dataset com uma distribuição normal parametrizada
@@ -316,6 +335,9 @@ def gaussian_probability_plot(dataset, params):
 
     # Configurar a distribuição normal parametrizada
     dist = stats.norm(loc=media, scale=desvio_padrao)
+
+    # Ordenar os dados
+    dataset = np.sort(dataset)
 
     # Criar o Probability Plot
     stats.probplot(dataset, dist=dist, plot=plt)
@@ -338,9 +360,13 @@ def gamma_probability_plot(dataset, params):
     # Extrair parâmetros da distribuição
     a = params['a']
     b = params['b']
+    loc = params['loc']
 
     # Configurar a distribuição gamma parametrizada
-    dist = stats.gamma(a=a, scale=b)
+    dist = stats.gamma(a=a, scale=b, loc=loc)
+
+    # Ordenar os dados
+    dataset = np.sort(dataset)
 
     # Criar o Probability Plot
     stats.probplot(dataset, dist=dist, plot=plt)
@@ -363,15 +389,19 @@ def passo_5(df_smart_up, df_smart_down, df_chrome_up, df_chrome_down, file = "es
     plt.figure(figsize=(12, 6))
     plt.subplot(2, 2, 1)
     gaussian_probability_plot(df_smart_up['bytes_up'], parametros_smart_up)
+    plt.ylim(-2, 10)
     plt.title('Smart TV - Upload')
     plt.subplot(2, 2, 2)
     gaussian_probability_plot(df_smart_down['bytes_down'], parametros_smart_down)
+    plt.ylim(-2, 10)
     plt.title('Smart TV - Download')
     plt.subplot(2, 2, 3)
     gaussian_probability_plot(df_chrome_up['bytes_up'], parametros_chrome_up)
+    plt.ylim(-2, 10)
     plt.title('Chromecast - Upload')
     plt.subplot(2, 2, 4)
     gaussian_probability_plot(df_chrome_down['bytes_down'], parametros_chrome_down)
+    plt.ylim(-2, 10)
     plt.title('Chromecast - Download')
     plt.tight_layout()
     if salvar:
@@ -382,15 +412,19 @@ def passo_5(df_smart_up, df_smart_down, df_chrome_up, df_chrome_down, file = "es
     plt.figure(figsize=(12, 6))
     plt.subplot(2, 2, 1)
     gamma_probability_plot(df_smart_up['bytes_up'], parametros_smart_up)
+    plt.ylim(-2, 10)
     plt.title('Smart TV - Upload')
     plt.subplot(2, 2, 2)
     gamma_probability_plot(df_smart_down['bytes_down'], parametros_smart_down)
+    plt.ylim(-2, 10)
     plt.title('Smart TV - Download')
     plt.subplot(2, 2, 3)
     gamma_probability_plot(df_chrome_up['bytes_up'], parametros_chrome_up)
+    plt.ylim(-2, 10)
     plt.title('Chromecast - Upload')
     plt.subplot(2, 2, 4)
     gamma_probability_plot(df_chrome_down['bytes_down'], parametros_chrome_down)
+    plt.ylim(-2, 10)
     plt.title('Chromecast - Download')
     plt.tight_layout()
     if salvar:
@@ -463,7 +497,7 @@ if __name__ == '__main__':
     # # passo 3: cálculo do MLE para distribuição Gaussiana e Gamma
     # passo_3(dataset_1, dataset_2, dataset_3, dataset_4, salvar=salvar)
 
-    # # passo 4: plotar histograma, pdf gaussiana e pdf gamma na mesma figura
+    # passo 4: plotar histograma, pdf gaussiana e pdf gamma na mesma figura
     # passo_4(dataset_1, dataset_2, dataset_3, dataset_4, file = "caracterizando os horários/estatisticas_mle.json", salvar = salvar)
 
     # passo 5: probability plot para cada distribuição usando os parametros do MLE
