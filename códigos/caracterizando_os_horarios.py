@@ -341,7 +341,6 @@ def gaussian_probability_plot(dataset, params):
 
     # Criar o Probability Plot
     stats.probplot(dataset, dist=dist, plot=plt)
-    plt.title("Probability Plot: Dados vs. Distribuição Normal Parametrizada")
     plt.xlabel("Quantis Teóricos")
     plt.ylabel("Quantis Amostrais")
     plt.grid(True)
@@ -370,7 +369,6 @@ def gamma_probability_plot(dataset, params):
 
     # Criar o Probability Plot
     stats.probplot(dataset, dist=dist, plot=plt)
-    plt.title("Probability Plot: Dados vs. Distribuição Gamma Parametrizada")
     plt.xlabel("Quantis Teóricos")
     plt.ylabel("Quantis Amostrais")
     plt.grid(True)

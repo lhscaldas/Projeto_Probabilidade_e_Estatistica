@@ -203,10 +203,18 @@ Nas caudas superiores, os pontos mostram que os valores da Smart TV são signifi
 
 Com base nos resultados, as seguintes questões foram avaliadas:
 \begin{enumerate}
-    \item \textbf{Quais foram os horários escolhidos para cada dataset?}
-    \item \textbf{O que foi observado a partir dos histogramas?}
-    \item \textbf{Quais diferenças e/ou similaridades foram identificadas entre os datasets 1, 2, 3 e 4?}
-    \item \textbf{É possível caracterizar os datasets por uma variável aleatória conhecida na literatura? Se não, por quê?}
-    \item \textbf{O que foi observado a partir dos gráficos \textit{QQ Plot} e \textit{Probability Plot}?}
+    \item \textbf{Quais foram os horários escolhidos para cada dataset?}  
+    Os horários escolhidos foram baseados nos gráficos de médias por hora (Figura~\ref{fig:estatisticas_por_hora}). Para a Smart TV, o horário de 20:00 foi escolhido para o upload (Dataset 1) e download (Dataset 2). Para o Chromecast, 22:00 foi selecionado para o upload (Dataset 3) e 23:00 para o download (Dataset 4).
+
+    \item \textbf{O que foi observado a partir dos histogramas?}  
+    Os histogramas (Figura~\ref{fig:histogramas_horarios}) mostraram que a Smart TV possui uma alta concentração de valores próximos de zero, com uma barra inicial significativamente maior que as demais. Já o Chromecast apresentou uma distribuição mais uniforme, com valores intermediários bem representados. Além disso, para a taxa de upload, os dados do Chromecast exibem pico em alguns valores médios.
+
+    \item \textbf{Quais diferenças e/ou similaridades foram identificadas entre os datasets 1, 2, 3 e 4?}  
+    Os dados da Smart TV (Datasets 1 e 2) apresentaram maior concentração de valores próximos a zero, evidenciado pelas barras iniciais mais altas nos histogramas. Em contraste, os dados do Chromecast (Datasets 3 e 4) apresentaram distribuições com picos em valores intermediários.
+
+    \item \textbf{É possível caracterizar os datasets por uma variável aleatória conhecida na literatura? Se não, por quê?}  
+    Não. Apesar de tentativas com as distribuições Gaussiana e Gamma, ambas apresentaram ajustes insatisfatórios, como evidenciado pelas \textit{likelihoods} nulas (Tabela~\ref{tab:likelihoods}) e pelos gráficos de densidade (Figura~\ref{fig:histogramas_pdf}). A alta concentração de valores próximos de zero e a complexidade da distribuição dos valores intermediários dificultam o ajuste a uma distribuição conhecida.
+
+    \item \textbf{O que foi observado a partir dos gráficos \textit{QQ Plot} e \textit{Probability Plot}?}  
+    Nos \textit{QQ Plots} (Figura~\ref{fig:qq_plot}), os dados da Smart TV mostram uma maior proporção de valores próximos de zero, resultando em um alinhamento horizontal em relação aos valores do Chromecast. Os \textit{Probability Plots} (Figuras~\ref{fig:probplot_gaussiana} e~\ref{fig:probplot_gamma}) revelaram que tanto a Gaussiana quanto a Gamma não capturam adequadamente os padrões observados nos histogramas, especialmente na concentração inicial e na dispersão dos valores intermediários.
 \end{enumerate}
-% As conclusões são apresentadas em termos de suas implicações para o gerenciamento da rede e o entendimento dos padrões de tráfego para Smart TVs e Chromecasts.
