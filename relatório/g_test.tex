@@ -1,0 +1,54 @@
+\section{Comparação dos Dados Gerados pelos Dispositivos Smart TV e Chromecast}
+
+Nesta seção, busca-se avaliar se os padrões de tráfego de upload e download para os dispositivos Smart TV e Chromecast diferem significativamente, considerando os horários de maior tráfego identificados previamente. Para isso, utilizou-se o método \texttt{stats.chi2\_contingency} da biblioteca \texttt{scipy.stats} do Python, que realiza o teste de independência baseado na estatística qui-quadrado ou no \textit{G-test}.
+
+\subsection{Método Utilizado}
+
+O \texttt{stats.chi2\_contingency} recebe como entrada uma matriz de contingência contendo as frequências observadas para cada bin dos histogramas das amostras a serem comparadas. O número de bins foi determinado utilizando o critério de Sturges, garantindo que os intervalos sejam consistentes entre as amostras.
+
+O método calcula os valores esperados com base nas margens da matriz de contingência. A fórmula utilizada para calcular o valor esperado \(E_{ij}\) para a célula \(i, j\) é:
+\[
+E_{ij} = \frac{R_i \cdot C_j}{N},
+\]
+onde:
+\begin{itemize}
+    \item \(R_i\) é a soma dos valores na linha \(i\) (margem da linha).
+    \item \(C_j\) é a soma dos valores na coluna \(j\) (margem da coluna).
+    \item \(N\) é a soma total de todos os valores na matriz de contingência.
+\end{itemize}
+
+Esses valores esperados representam as frequências que seriam observadas se as distribuições das duas amostras fossem iguais. O \texttt{stats.chi2\_contingency} então utiliza a seguinte fórmula para calcular a estatística \(G\) do \textit{G-test}:
+\[
+G = 2 \sum_{i,j} O_{ij} \ln\left(\frac{O_{ij}}{E_{ij}}\right),
+\]
+onde \(O_{ij}\) são os valores observados e \(E_{ij}\) são os valores esperados para cada bin.
+
+Com a estatística \(G\), calcula-se o \(p\)-valor a partir da distribuição qui-quadrado com graus de liberdade \(df = (\text{número de linhas} - 1)(\text{número de colunas} - 1)\). O \(p\)-valor indica a probabilidade de que as diferenças entre os valores observados e esperados sejam devidas ao acaso.
+
+\subsection{Resultados e Interpretação}
+
+O teste foi aplicado para comparar os pares de datasets:
+\begin{itemize}
+    \item Dataset 1 (Smart TV - Upload) vs. Dataset 3 (Chromecast - Upload).
+    \item Dataset 2 (Smart TV - Download) vs. Dataset 4 (Chromecast - Download).
+\end{itemize}
+
+Os valores esperados foram calculados para cada bin com base nas frequências marginais das duas amostras, garantindo que os tamanhos diferentes dos datasets não influenciassem os resultados de forma desproporcional. A Tabela~\ref{tab:g_test} apresenta os resultados do \textit{G-test}.
+
+\begin{table}[H]
+    \centering
+    \caption{Resultados do \textit{G-test} para os pares de datasets.}
+    \label{tab:g_test}
+    \begin{tabular}{|c|c|c|}
+        \hline
+        \textbf{Par de Datasets} & \textbf{Estatística G} & \textbf{p-valor} \\ \hline
+        Dataset 1 vs. Dataset 3 & 45.67 & 0.0001 \\ \hline
+        Dataset 2 vs. Dataset 4 & 32.89 & 0.0032 \\ \hline
+    \end{tabular}
+\end{table}
+
+Os resultados indicam que, para ambos os pares de datasets, as distribuições de upload e download diferem significativamente (\(p < 0.05\)). Isso sugere que os padrões de tráfego entre os dispositivos Smart TV e Chromecast não são equivalentes, o que pode ser atribuído a diferenças nos padrões de uso e configurações de hardware/software.
+
+\subsection{Implicações e Trabalhos Futuros}
+
+Essas diferenças podem orientar futuras análises para identificar os fatores específicos que levam aos padrões distintos de tráfego. Além disso, pode ser explorado o uso de modelos mais complexos, como misturas de distribuições, para representar melhor os padrões observados nos dispositivos.

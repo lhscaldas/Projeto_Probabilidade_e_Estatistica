@@ -1,2 +1,2 @@
-Correlacao entre as taxas de upload dos datasets 1 e 3: 0.915609
-Correlacao entre as taxas de download dos datasets 2 e 4: 0.004962
+Correlacao entre as taxas de upload dos datasets 1 e 2: 0.915609
+Correlacao entre as taxas de download dos datasets 3 e 4: 0.224821
