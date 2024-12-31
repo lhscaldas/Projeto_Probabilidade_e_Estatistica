@@ -69,7 +69,7 @@ if __name__ == '__main__':
     dataset_4 = pd.read_csv('dados/dataset_4.csv')
 
     # Teste de hipótese G
-    bins = 18
+    bins = 19
     resultados_13 = G_test(dataset_1['bytes_up'], dataset_3['bytes_up'], bins=bins)
     print("Teste de hipótese G entre os datasets 1 e 3:")
     print("Estatística de teste para upload:", resultados_13['G'])

@@ -1,1 +1,15 @@
 \section{Conclusão}
+
+Este estudo analisou as taxas de \textit{upload} e \textit{download} de dispositivos domésticos \textit{Smart-TV} e \textit{Chromecast}, utilizando métodos estatísticos e técnicas de visualização de dados para compreender padrões de tráfego e diferenças comportamentais entre os dispositivos. As análises revelaram \textit{insights} relevantes para a gestão de rede por provedores de serviços.
+
+Inicialmente, foram apresentadas estatísticas gerais que evidenciaram diferenças significativas na variabilidade e nos padrões de tráfego. A \textit{Smart-TV} demonstrou uma maior dispersão e concentração em valores baixos, enquanto o \textit{Chromecast} apresentou um uso mais consistente, embora com picos e vales ocasionais no \textit{upload}. Essas observações destacam diferentes características operacionais entre os dispositivos, refletindo diferentes padrões de uso.
+
+Na análise por horário, identificaram-se padrões de uso distintos. A \textit{Smart-TV} apresentou picos de tráfego à noite, enquanto o \textit{Chromecast} mostrou um uso mais estável ao longo do dia, com picos nos horários de maior atividade. Esses padrões sugerem que os dispositivos têm propósitos de uso diferentes, o que influencia diretamente suas demandas de rede, reforçando a necessidade de estratégias adaptativas para otimizar a alocação de recursos em horários de maior demanda.
+
+A caracterização dos horários de maior tráfego revelou que nem as distribuições Gaussiana nem Gamma foram adequadas para modelar os dados. Os \textit{Probability Plots} evidenciaram discrepâncias significativas entre os dados empíricos e as distribuições teóricas analisadas, especialmente nas regiões extremas dos dados. Alternativas, como misturas de distribuições ou métodos não paramétricos, foram sugeridas para representar melhor os padrões observados. Além disso, o \textit{QQ-Plot} destacou diferenças importantes entre as taxas de \textit{upload} e \textit{download} ao comparar estas taxas entre os dois dispositivos analisados, indicando que seguem distribuições distintas.
+
+A análise de correlação destacou uma forte relação positiva entre \textit{upload} e \textit{download} na \textit{Smart-TV}, mas uma correlação mais fraca no \textit{Chromecast}, possivelmente devido à falta de sincronização nos horários de maior tráfego. Por fim, a comparação dos dispositivos, utilizando o \textit{G-test}, revelou diferenças significativas nos padrões de tráfego, com a \textit{Smart-TV} concentrando valores baixos e o \textit{Chromecast} apresentando densidade em faixas intermediárias.
+
+Esses resultados fornecem subsídios valiosos para o provedor de serviços. Estratégias como a priorização de recursos em horários de pico para a \textit{Smart-TV} e o ajuste fino de alocação para o uso estável do \textit{Chromecast} podem melhorar a experiência do usuário. Investigações futuras podem explorar dispositivos adicionais ou variáveis contextuais, como qualidade de serviço ou tipos de aplicação, para ampliar a compreensão dos padrões de tráfego e refinar ainda mais as estratégias de gestão de rede.
+
+

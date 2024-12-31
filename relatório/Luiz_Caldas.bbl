@@ -5,12 +5,6 @@
 \providecommand{\abntbstabout}[1]{}
 \abntbstabout{v-1.9.7 }
 
-\bibitem{minka2002estimating}
-\abntrefinfo{Minka}{MINKA}{2002}
-{MINKA, T.~P. \emph{Estimating a Gamma distribution}.
-[S.l.], 2002. Dispon{\'\i}vel em:
-  $<$https://tminka.github.io/papers/minka-gamma.pdf$>$.}
-
 \bibitem{Kobayashi_2011}
 \abntrefinfo{Kobayashi, Mark e Turin}{KOBAYASHI; MARK; TURIN}{2011}
 {KOBAYASHI, H.; MARK, B.~L.; TURIN, W. \emph{Probability, Random Processes, and
@@ -24,5 +18,18 @@
   Processes}. Kappa Research, LLC, 2014.
 ISBN 9780990637202. Dispon{\'\i}vel em:
   $<$https://books.google.com.br/books?id=3yq\_oQEACAAJ$>$.}
+
+\bibitem{minka2002estimating}
+\abntrefinfo{Minka}{MINKA}{2002}
+{MINKA, T.~P. \emph{Estimating a Gamma distribution}.
+[S.l.], 2002. Dispon{\'\i}vel em:
+  $<$https://tminka.github.io/papers/minka-gamma.pdf$>$.}
+
+\bibitem{scipy_chi2_contingency}
+\abntrefinfo{{SciPy Developers}}{{SciPy Developers}}{2024}
+{{SciPy Developers}. \emph{scipy.stats.chi2\_contingency}. 2024.
+Accessed: 2024-12-31.
+Dispon{\'\i}vel em:
+  $<$https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.chi2\_contingency.html$>$.}
 
 \end{thebibliography}

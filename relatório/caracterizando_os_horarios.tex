@@ -18,7 +18,7 @@ A partir dos gráficos de médias por hora apresentados Figura~\ref{fig:estatist
         \end{itemize}
 \end{itemize}
 
-\subsection{Passo 2: Histogramas dos Dados}
+\subsection{Passo 2: Histogramas dos Dados} \label{sec:histogramas}
 
 Histogramas foram gerados para cada um dos 4 datasets criados no Passo 1. O método de Sturges (Equação~\ref{eq:sturges}) foi utilizado para determinar o número adequado de bins, obtendo-se os seguintes valores:
 
@@ -202,19 +202,25 @@ Nas caudas superiores, os pontos mostram que os valores da Smart TV são signifi
 \subsection{Análise dos Resultados}
 
 Com base nos resultados, as seguintes questões foram avaliadas:
+
 \begin{enumerate}
     \item \textbf{Quais foram os horários escolhidos para cada dataset?}  
-    Os horários escolhidos foram baseados nos gráficos de médias por hora (Figura~\ref{fig:estatisticas_por_hora}). Para a Smart TV, o horário de 20:00 foi escolhido para o upload (Dataset 1) e download (Dataset 2). Para o Chromecast, 22:00 foi selecionado para o upload (Dataset 3) e 23:00 para o download (Dataset 4).
+    Os horários escolhidos foram baseados nos gráficos de médias por hora (Figura~\ref{fig:estatisticas_por_hora}). Para a Smart TV, o horário de 20:00 foi escolhido para o upload (Dataset 1) e download (Dataset 2). Para o Chromecast, 22:00 foi selecionado para o upload (Dataset 3) e 23:00 para o download (Dataset 4). Esses horários correspondem aos períodos de maior utilização dos dispositivos, fornecendo ao provedor uma visão clara dos horários críticos para planejamento de capacidade.
 
     \item \textbf{O que foi observado a partir dos histogramas?}  
-    Os histogramas (Figura~\ref{fig:histogramas_horarios}) mostraram que a Smart TV possui uma alta concentração de valores próximos de zero, com uma barra inicial significativamente maior que as demais. Já o Chromecast apresentou uma distribuição mais uniforme, com valores intermediários bem representados. Além disso, para a taxa de upload, os dados do Chromecast exibem pico em alguns valores médios.
+    Os histogramas (Figura~\ref{fig:histogramas_horarios}) mostraram que a Smart TV apresenta uma alta concentração de valores próximos de zero, evidenciada pela barra inicial muito maior que as demais. No Chromecast, a distribuição é mais uniforme, com maior densidade em valores intermediários. Essa diferença reflete padrões de uso distintos: a Smart TV possui períodos de baixa atividade alternados com picos intensos, enquanto o Chromecast mantém um comportamento mais estável, com picos menos frequentes e mais controlados.
 
     \item \textbf{Quais diferenças e/ou similaridades foram identificadas entre os datasets 1, 2, 3 e 4?}  
-    Os dados da Smart TV (Datasets 1 e 2) apresentaram maior concentração de valores próximos a zero, evidenciado pelas barras iniciais mais altas nos histogramas. Em contraste, os dados do Chromecast (Datasets 3 e 4) apresentaram distribuições com picos em valores intermediários.
+    As taxas de upload e download da Smart TV (Datasets 1 e 2) possuem maior concentração em valores baixos e variabilidade mais acentuada, enquanto as do Chromecast (Datasets 3 e 4) apresentam maior uniformidade. Além disso, os picos de tráfego no Chromecast são mais previsíveis e ocorrem em valores intermediários. Essa diferenciação pode ser usada pelo provedor para personalizar estratégias de alocação de largura de banda para cada dispositivo.
 
     \item \textbf{É possível caracterizar os datasets por uma variável aleatória conhecida na literatura? Se não, por quê?}  
-    Não. Apesar de tentativas com as distribuições Gaussiana e Gamma, ambas apresentaram ajustes insatisfatórios, como evidenciado pelas \textit{likelihoods} nulas (Tabela~\ref{tab:likelihoods}) e pelos gráficos de densidade (Figura~\ref{fig:histogramas_pdf}). A alta concentração de valores próximos de zero e a complexidade da distribuição dos valores intermediários dificultam o ajuste a uma distribuição conhecida.
+    Não. Apesar das tentativas de ajuste com as distribuições Gaussiana e Gamma, ambas se mostraram inadequadas para modelar os dados. Isso é evidente tanto pelos \textit{Probability Plots} quanto pelos valores muito negativos das \textit{log-likelihoods} (Tabela~\ref{tab:likelihoods}). As características observadas, como alta concentração de valores próximos a zero e padrões assimétricos, não correspondem a distribuições paramétricas conhecidas, indicando a necessidade de alternativas, como misturas de distribuições ou abordagens não paramétricas.
 
     \item \textbf{O que foi observado a partir dos gráficos \textit{QQ Plot} e \textit{Probability Plot}?}  
-    Nos \textit{QQ Plots} (Figura~\ref{fig:qq_plot}), os dados da Smart TV mostram uma maior proporção de valores próximos de zero, resultando em um alinhamento horizontal em relação aos valores do Chromecast. Os \textit{Probability Plots} (Figuras~\ref{fig:probplot_gaussiana} e~\ref{fig:probplot_gamma}) revelaram que tanto a Gaussiana quanto a Gamma não capturam adequadamente os padrões observados nos histogramas, especialmente na concentração inicial e na dispersão dos valores intermediários.
+    Os \textit{QQ Plots} (Figura~\ref{fig:qq_plot}) mostram desalinhamentos significativos entre os quantis da Smart TV e do Chromecast, especialmente nas regiões de cauda, onde a Smart TV apresenta maior variabilidade. Nos \textit{Probability Plots} (Figuras~\ref{fig:probplot_gaussiana} e~\ref{fig:probplot_gamma}), as distribuições propostas (Gaussiana e Gamma) falham em capturar os padrões observados, particularmente na concentração inicial de valores baixos e na dispersão dos valores intermediários.
 \end{enumerate}
+
+Adicionalmente, as análises destacam a importância de compreender os padrões de tráfego para otimizar a alocação de recursos. Por exemplo, a alta variabilidade observada na Smart TV exige soluções adaptativas que priorizem horários de pico e períodos de uso intensivo, como o streaming noturno. Já o comportamento mais uniforme do Chromecast permite alocações consistentes de largura de banda, mas os picos eventuais no upload demandam atenção especial para evitar gargalos.
+
+Com base nessas observações, recomenda-se que o provedor implemente um sistema de monitoramento dinâmico para identificar padrões específicos de tráfego e ajustar a largura de banda em tempo real, garantindo eficiência operacional e qualidade de experiência para os usuários finais.
+

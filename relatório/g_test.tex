@@ -1,10 +1,10 @@
-\section{Comparação dos Dados Gerados pelos Dispositivos Smart TV e Chromecast}
+\section{Comparação dos Dados Gerados pelos Dispositivos \textit{Smart-TV} e \textit{Chromecast}}
 
-Nesta seção, busca-se avaliar se os padrões de tráfego de upload e download para os dispositivos Smart TV e Chromecast diferem significativamente, considerando os horários de maior tráfego identificados previamente. Para isso, utilizou-se o método \texttt{stats.chi2\_contingency} da biblioteca \texttt{scipy.stats} do Python, que realiza o teste de independência baseado na estatística qui-quadrado ou no \textit{G-test}.
+Nesta seção, busca-se avaliar se os padrões de tráfego de \textit{upload} e \textit{download} para os dispositivos \textit{Smart-TV} e \textit{Chromecast} diferem significativamente, considerando os horários de maior tráfego identificados previamente. Para isso, utilizou-se o método \texttt{stats.chi2\_contingency} da biblioteca \texttt{scipy.stats} do Python, que realiza o teste de independência baseado na estatística qui-quadrado ou no \textit{G-test}.
 
 \subsection{Método Utilizado}
 
-O \texttt{stats.chi2\_contingency} recebe como entrada uma matriz de contingência contendo as frequências observadas para cada bin dos histogramas das amostras a serem comparadas. O número de bins foi determinado utilizando o critério de Sturges, garantindo que os intervalos sejam consistentes entre as amostras.
+O \texttt{stats.chi2\_contingency} recebe como entrada uma matriz de contingência contendo as frequências observadas para cada bin dos histogramas das amostras a serem comparadas \cite{scipy_chi2_contingency}. O número de bins foi determinado utilizando o critério de Sturges, garantindo que os intervalos sejam consistentes entre as amostras.
 
 O método calcula os valores esperados com base nas margens da matriz de contingência. A fórmula utilizada para calcular o valor esperado \(E_{ij}\) para a célula \(i, j\) é:
 \[
@@ -25,30 +25,99 @@ onde \(O_{ij}\) são os valores observados e \(E_{ij}\) são os valores esperado
 
 Com a estatística \(G\), calcula-se o \(p\)-valor a partir da distribuição qui-quadrado com graus de liberdade \(df = (\text{número de linhas} - 1)(\text{número de colunas} - 1)\). O \(p\)-valor indica a probabilidade de que as diferenças entre os valores observados e esperados sejam devidas ao acaso.
 
-\subsection{Resultados e Interpretação}
+\subsection{Resultados}
 
-O teste foi aplicado para comparar os pares de datasets:
 \begin{itemize}
-    \item Dataset 1 (Smart TV - Upload) vs. Dataset 3 (Chromecast - Upload).
-    \item Dataset 2 (Smart TV - Download) vs. Dataset 4 (Chromecast - Download).
+    \item \textit{Dataset} 1 (\textit{Smart-TV} - \textit{Upload}) vs. \textit{Dataset} 3 (\textit{Chromecast} - \textit{Upload}).
+    \item \textit{Dataset} 2 (\textit{Smart-TV} - \textit{Download}) vs. \textit{Dataset} 4 (\textit{Chromecast} - \textit{Download}).
 \end{itemize}
 
+Na Seção~\ref{sec:histogramas} o resultado do método de Sturges para os \textit{datasets} 1 e 2 foi de 19 bins e para os \textit{datasets} 3 e 4 foi de 20 bins. Foi decidido então utilizar 19 bins para todos os pares de \textit{datasets} para garantir a consistência entre as comparações. Os valores observados e esperados para cada bin em cada par de \textit{datasets} são apresentados nas tabelas \ref{tab:g_test_parameters_13} e \ref{tab:g_test_parameters_24}.
+
+\begin{table}[H]
+    \centering
+    \caption{Parâmetros do \textit{G-test} para o par de \textit{datasets} 1 e 3.}
+    \label{tab:g_test_parameters_13}
+    \begin{tabular}{|c|c|c|c|}
+    \hline
+    \textbf{Bin} & \textbf{Limites do Bin} & \textbf{Valores Observados ($O_{ij}$)} & \textbf{Valores Esperados ($E_{ij}$)} \\ \hline
+    1  & [0.0, 0.3553]      & 36962, 399       & 27452.42, 9908.58       \\ \hline
+    2  & (0.3553, 0.7107]   & 12, 32           & 32.33, 11.67            \\ \hline
+    3  & (0.7107, 1.0660]   & 1727, 53         & 1307.92, 472.08         \\ \hline
+    4  & (1.0660, 1.4213]   & 2787, 134        & 2146.32, 774.68         \\ \hline
+    5  & (1.4213, 1.7766]   & 3659, 315        & 2920.05, 1053.95        \\ \hline
+    6  & (1.7766, 2.1320]   & 12192, 742       & 9503.75, 3430.25        \\ \hline
+    7  & (2.1320, 2.4873]   & 10704, 1209      & 8753.53, 3159.47        \\ \hline
+    8  & (2.4873, 2.8426]   & 8954, 8631       & 12921.25, 4663.75       \\ \hline
+    9  & (2.8426, 3.1979]   & 13078, 12830     & 19036.89, 6871.11       \\ \hline
+    10 & (3.1979, 3.5533]   & 17528, 22123     & 29135.08, 10515.92      \\ \hline
+    11 & (3.5533, 3.9086]   & 19331, 14698     & 25004.10, 9024.90       \\ \hline
+    12 & (3.9086, 4.2639]   & 12325, 2738      & 11068.11, 3994.89       \\ \hline
+    13 & (4.2639, 4.6193]   & 17571, 2915      & 15052.87, 5433.13       \\ \hline
+    14 & (4.6193, 4.9746]   & 26351, 5482      & 23390.51, 8442.49       \\ \hline
+    15 & (4.9746, 5.3299]   & 20653, 3715      & 17905.32, 6462.68       \\ \hline
+    16 & (5.3299, 5.6852]   & 7106, 711        & 5743.84, 2073.16        \\ \hline
+    17 & (5.6852, 6.0406]   & 1531, 11         & 1133.04, 408.96         \\ \hline
+    18 & (6.0406, 6.3959]   & 126, 0       & 92.58, 33.42            \\ \hline
+    19 & (6.3959, 6.7512]   & 11, 0        & 8.08, 2.92              \\ \hline
+    \end{tabular}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \caption{Parâmetros do \textit{G-test} para o par de \textit{datasets} 2 e 4.}
+    \label{tab:g_test_parameters_24}
+    \begin{tabular}{|c|c|c|c|}
+    \hline
+    \textbf{Bin} & \textbf{Limites do Bin} & \textbf{Valores Observados ($O_{ij}$)} & \textbf{Valores Esperados ($E_{ij}$)} \\ \hline
+    1  & [0.0, 0.3553]      & 36962, 705       & 28153.06, 9513.94       \\ \hline
+     2  & (0.3553, 0.7107]   & 12, 19           & 23.17, 7.83             \\ \hline
+     3  & (0.7107, 1.0660]   & 1727, 72         & 1344.61, 454.39         \\ \hline
+     4  & (1.0660, 1.4213]   & 2787, 146        & 2192.18, 740.82         \\ \hline
+     5  & (1.4213, 1.7766]   & 3659, 345        & 2992.67, 1011.33        \\ \hline
+     6  & (1.7766, 2.1320]   & 12192, 777       & 9693.29, 3275.71        \\ \hline
+     7  & (2.1320, 2.4873]   & 10704, 1220      & 8912.23, 3011.77        \\ \hline
+     8  & (2.4873, 2.8426]   & 8954, 8750       & 13232.32, 4471.68       \\ \hline
+     9  & (2.8426, 3.1979]   & 13078, 11792     & 18588.33, 6281.67       \\ \hline
+     10 & (3.1979, 3.5533]   & 17528, 20816     & 28659.06, 9684.94       \\ \hline
+     11 & (3.5533, 3.9086]   & 19331, 11781     & 23253.72, 7858.28       \\ \hline
+     12 & (3.9086, 4.2639]   & 12325, 1896      & 10629.05, 3591.95       \\ \hline
+     13 & (4.2639, 4.6193]   & 17571, 3318      & 15612.85, 5276.15       \\ \hline
+     14 & (4.6193, 4.9746]   & 26351, 5722      & 23971.99, 8101.01       \\ \hline
+     15 & (4.9746, 5.3299]   & 20653, 3957      & 18394.00, 6216.00       \\ \hline
+     16 & (5.3299, 5.6852]   & 7106, 532        & 5708.79, 1929.21        \\ \hline
+     17 & (5.6852, 6.0406]   & 1531, 0          & 1144.30, 386.70         \\ \hline
+     18 & (6.0406, 6.3959]   & 126, 0           & 94.17, 31.83            \\ \hline
+     19 & (6.3959, 6.7512]   & 11, 0            & 8.22, 2.78              \\ \hline
+    \end{tabular}
+\end{table}
+    
 Os valores esperados foram calculados para cada bin com base nas frequências marginais das duas amostras, garantindo que os tamanhos diferentes dos datasets não influenciassem os resultados de forma desproporcional. A Tabela~\ref{tab:g_test} apresenta os resultados do \textit{G-test}.
 
 \begin{table}[H]
     \centering
-    \caption{Resultados do \textit{G-test} para os pares de datasets.}
+    \caption{Resultados do \textit{G-test} para os pares de \textit{datasets}.}
     \label{tab:g_test}
     \begin{tabular}{|c|c|c|}
         \hline
-        \textbf{Par de Datasets} & \textbf{Estatística G} & \textbf{p-valor} \\ \hline
-        Dataset 1 vs. Dataset 3 & 45.67 & 0.0001 \\ \hline
-        Dataset 2 vs. Dataset 4 & 32.89 & 0.0032 \\ \hline
+        \textbf{Par de \textit{Datasets}} & \textbf{Estatística G} & \textbf{p-valor} \\ \hline
+        \textit{Dataset} 1 vs. \textit{Dataset} 3 & 65744.54 & 0.0000 \\ \hline
+        \textit{Dataset} 2 vs. \textit{Dataset} 4 & 58395.64 & 0.0000 \\ \hline
     \end{tabular}
 \end{table}
 
-Os resultados indicam que, para ambos os pares de datasets, as distribuições de upload e download diferem significativamente (\(p < 0.05\)). Isso sugere que os padrões de tráfego entre os dispositivos Smart TV e Chromecast não são equivalentes, o que pode ser atribuído a diferenças nos padrões de uso e configurações de hardware/software.
+\subsection{Análise dos Resultados}
 
-\subsection{Implicações e Trabalhos Futuros}
+Os resultados do \textit{G-test}, apresentados nas Tabelas~\ref{tab:g_test_parameters_13}, \ref{tab:g_test_parameters_24} e~\ref{tab:g_test}, revelam diferenças significativas entre os padrões de tráfego dos dispositivos \textit{Smart-TV} e \textit{Chromecast}. A estatística \(G\) para ambos os pares de \textit{datasets} (1 vs. 3 e 2 vs. 4) apresentou valores extremamente altos (65744.54 e 58395.64, respectivamente), acompanhados de \(p\)-valores próximos de zero. Esses resultados indicam que as distribuições das taxas de \textit{upload} e \textit{download} entre os dispositivos diferem significativamente.
 
-Essas diferenças podem orientar futuras análises para identificar os fatores específicos que levam aos padrões distintos de tráfego. Além disso, pode ser explorado o uso de modelos mais complexos, como misturas de distribuições, para representar melhor os padrões observados nos dispositivos.
+Uma análise detalhada dos valores observados (\(O_{ij}\)) e esperados (\(E_{ij}\)) em cada bin revela que as maiores discrepâncias ocorrem nos bins iniciais e nas faixas intermediárias de maior densidade (\([2.4873, 4.2639]\)) para o par \textit{Dataset} 1 (\textit{Smart-TV} - \textit{Upload}) e \textit{Dataset} 3 (\textit{Chromecast} - \textit{Upload}). No bin inicial (\([0.0, 0.3553]\), \(i=1\)), observa-se uma alta concentração de valores próximos de zero na \textit{Smart-TV} (\(j=1\)), com \(O_{11} = 36962\) e \(E_{11} = 27452.42\). Para o \textit{Chromecast} (\(j=3\)), os valores observados e esperados são \(O_{13} = 399\) e \(E_{13} = 9908.58\), respectivamente, refletindo diferenças significativas no comportamento de tráfego entre os dispositivos.
+
+Nas faixas intermediárias, especialmente nos bins que abrangem \([2.4873, 4.2639]\) (\(i = 8, 9, 10\)), as discrepâncias permanecem evidentes. No bin \(i=8\) (\([2.4873, 2.8426]\)), os valores observados para a \textit{Smart-TV} (\(j=1\)) e \textit{Chromecast} (\(j=3\)) são \(O_{81} = 8954\) e \(O_{83} = 8631\), enquanto os valores esperados são \(E_{81} = 12921.25\) e \(E_{83} = 4663.75\), evidenciando um maior tráfego para o \textit{Chromecast} nessa faixa. Comportamentos semelhantes são observados nos bins \(i=9\) e \(i=10\).
+
+A análise para o par \textit{Dataset} 2 (\textit{Smart-TV} - \textit{Download}) e \textit{Dataset} 4 (\textit{Chromecast} - \textit{Download}) segue um padrão semelhante, conforme mostrado na Tabela~\ref{tab:g_test_parameters_24}. Os bins iniciais (\([0.0, 0.3553]\)) e as faixas intermediárias de maior densidade (\([2.4873, 4.2639]\)) também apresentam discrepâncias significativas entre os valores observados e esperados, indicando comportamentos distintos entre os dispositivos para essas faixas de tráfego.
+
+O \textit{G-test} confirma diferenças substanciais nos padrões de tráfego entre os dispositivos. A \textit{Smart-TV} apresenta uma alta concentração de valores baixos, enquanto o \textit{Chromecast} mostra uma densidade maior em faixas intermediárias. Essas discrepâncias refletem a natureza distinta de uso e comportamento de tráfego dos dois dispositivos, como já observado nas análises anteriores.
+
+Essas discrepâncias indicam diferenças fundamentais no uso e comportamento de tráfego entre os dispositivos. A alta concentração de valores baixos para a \textit{Smart-TV} pode ser um reflexo de períodos de inatividade intercalados com picos de tráfego em momentos específicos. Já o \textit{Chromecast} apresenta um padrão mais consistente, com uma maior densidade de tráfego em faixas intermediárias, sugerindo um uso mais uniforme.
+
+Os resultados têm implicações diretas para o gerenciamento de rede. A maior densidade de tráfego do \textit{Chromecast} em faixas intermediárias pode demandar estratégias de alocação de largura de banda que priorizem dispositivos de uso contínuo. Por outro lado, a alta variabilidade da \textit{Smart-TV}, com valores baixos seguidos por picos, pode exigir políticas de priorização adaptativa para garantir uma boa experiência do usuário, especialmente durante os horários de maior tráfego. Estudar mais profundamente os cenários de uso específicos desses dispositivos pode ajudar a refinar essas estratégias.
