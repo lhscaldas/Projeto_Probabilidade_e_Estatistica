@@ -4,7 +4,9 @@ Nesta seção, foi analisada a relação entre as taxas de upload e download par
 
 \subsection{Cálculo do Coeficiente de Correlação}
 
-O coeficiente de correlação amostral foi calculado para cada dispositivo, considerando os datasets correspondentes aos horários selecionados:
+O coeficiente de correlação de Pearson foi calculado para cada dispositivo, utilizando o método \texttt{corr} da biblioteca \texttt{pandas} do Python. O coeficiente de correlação varia de -1 a 1, onde valores próximos de 1 indicam uma correlação positiva forte, valores próximos de -1 indicam uma correlação negativa forte e valores próximos de 0 indicam ausência de correlação.
+
+considerando os datasets correspondentes aos horários selecionados:
 \begin{itemize}
     \item \textbf{Smart TV:} Comparação entre o Dataset 1 (Upload) e o Dataset 2 (Download).
     \item \textbf{Chromecast:} Comparação entre o Dataset 3 (Upload) e o Dataset 4 (Download).
@@ -20,11 +22,9 @@ Os valores dos coeficientes de correlação para cada dispositivo são apresenta
         \hline
         \textbf{Dispositivo} & \textbf{Coeficiente de Correlação} \\ \hline
         Smart TV & 0.9156 \\ \hline
-        Chromecast & 0.0050 \\ \hline
+        Chromecast & 0.2248 \\ \hline
     \end{tabular}
 \end{table}
-
-Os coeficientes indicam uma correlação positiva moderada para ambos os dispositivos, sendo ligeiramente mais forte na Smart TV.
 
 \subsection{Gráficos de Dispersão}
 
@@ -39,8 +39,13 @@ Os gráficos de dispersão foram gerados para ilustrar a relação entre as taxa
 
 \subsection{Análise dos Resultados}
 
-Os resultados revelam uma correlação positiva entre as taxas de upload e download para ambos os dispositivos. Para a Smart TV, a correlação mais forte pode ser atribuída a um padrão de uso onde upload e download ocorrem de forma sincronizada, como em transmissões de streaming que requerem alta interação entre o dispositivo e a rede.
+Os resultados apresentados demonstram padrões distintos na relação entre as taxas de upload e download para os dispositivos Smart TV e Chromecast. 
 
-Já para o Chromecast, a correlação moderada sugere que as taxas de upload e download possuem menor sincronismo, possivelmente devido a diferenças nos padrões de uso, como bufferizações mais frequentes ou uso em aplicativos de menor interação com a rede.
+Para a Smart TV, o coeficiente de correlação de 0.9156 indica uma forte relação positiva entre as taxas de upload e download. Esse comportamento é evidenciado no gráfico de dispersão (Figura~\ref{fig:scatter_plot}), onde os pontos formam um padrão alinhado, sugerindo que aumentos em uma taxa estão fortemente associados a aumentos na outra. A concentração dos pontos reflete também a homogeneidade dos dados durante o horário analisado, reforçando a sincronização entre os \textit{datasets} 1 e 2, uma vez que os horários de maior tráfego coincidem (20h para ambos).
 
-Essas informações podem auxiliar o provedor de serviços de Internet a identificar padrões de tráfego específicos para cada dispositivo, contribuindo para o planejamento de políticas de qualidade de serviço e alocação de recursos de rede.
+Por outro lado, o Chromecast apresentou um coeficiente de correlação de 0.2248, indicando uma relação positiva fraca entre as taxas de upload e download. No gráfico de dispersão, os pontos estão significativamente mais espalhados, sugerindo uma menor dependência entre as duas taxas. Esse comportamento pode ser atribuído à falta de sincronização entre os horários analisados nos \textit{datasets} 3 e 4 (22 e 23h, respectivamente), o que resulta em padrões de tráfego menos alinhados.
+
+
+
+
+
